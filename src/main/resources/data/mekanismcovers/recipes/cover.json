@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#R#",
+    "RGR",
+    "#R#"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:nuggets/osmium"
+    },
+    "R": {
+      "tag": "forge:dusts/wood"
+    },
+    "G": {
+      "tag": "forge:glass"
+    }
+  },
+  "result": {
+    "item": "mekanismcovers:cover",
+    "count": 4
+  }
+}
