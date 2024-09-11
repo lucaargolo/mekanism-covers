@@ -1,14 +1,6 @@
 package dev.lucaargolo.mekanismcovers;
 
-import com.mojang.blaze3d.shaders.Uniform;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import dev.lucaargolo.mekanismcovers.mixed.TileEntityTransmitterMixed;
-import mekanism.api.providers.IBlockProvider;
-import mekanism.common.block.transmitter.BlockTransmitter;
-import mekanism.common.registries.MekanismBlocks;
-import mekanism.common.tile.transmitter.TileEntityTransmitter;
-import mekanism.common.util.WorldUtils;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -19,27 +11,26 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.io.IOException;
-
 @Mod(MekanismCovers.MODID)
 public class MekanismCovers {
+
+    /*
+    * TODO:
+    *  - Add remaining stacks after un-assigning cover.
+    *  - Fix Nvidium compatibility.
+    *  - Maybe fix shadow and other render quirks? I don't care to be honest.
+    * */
 
     public static final String MODID = "mekanismcovers";
 

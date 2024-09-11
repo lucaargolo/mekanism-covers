@@ -50,6 +50,8 @@ public class CoverRecipe extends CustomRecipe {
                     BlockState state = block.defaultBlockState();
                     if(block.isCollisionShapeFullBlock(state, pLevel, BlockPos.ZERO)) {
                         blockQnt++;
+                    }else{
+                        return false;
                     }
                 }else{
                     return false;
