@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-@Mixin(DefaultTerrainRenderPasses.class)
+@Mixin(value = DefaultTerrainRenderPasses.class, remap = false)
 public class DefaultTerrainRenderPassesMixin {
 
     @Shadow @Final @Mutable public static TerrainRenderPass[] ALL;

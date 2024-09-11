@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = TileEntityTransmitter.class, remap = false)
+@Mixin(value = TileEntityTransmitter.class)
 public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity implements ProxyConfigurable.ISidedConfigurable, IAlloyInteraction, TileEntityTransmitterMixed {
 
     @Unique
@@ -36,7 +36,7 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    @Inject(at = @At("RETURN"), method = "getModelData", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "getModelData", cancellable = true, remap = false)
     public void injectCoverModel(CallbackInfoReturnable<ModelData> cir) {
         ModelData data = cir.getReturnValue();
         ModelData.Builder builder = ModelData.builder();
@@ -71,7 +71,7 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
         }
     }
 
-    @Inject(at = @At("RETURN"), method = "getReducedUpdateTag", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "getReducedUpdateTag", cancellable = true, remap = false)
     public void injectSaveCover(CallbackInfoReturnable<CompoundTag> cir) {
         CompoundTag nbtTags = cir.getReturnValue();
         if(this.mekanism_covers$coverState != null) {
@@ -81,7 +81,7 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
     }
 
     @SuppressWarnings("deprecation")
-    @Inject(at = @At("TAIL"), method = "handleUpdateTag")
+    @Inject(at = @At("TAIL"), method = "handleUpdateTag", remap = false)
     public void injectUpdateTag(@NotNull CompoundTag nbtTags, CallbackInfo ci) {
         try {
             String serialized = nbtTags.getString("CoverState");

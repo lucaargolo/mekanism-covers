@@ -9,12 +9,18 @@ import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.tile.transmitter.TileEntityTransmitter;
 import mekanism.common.util.WorldUtils;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
@@ -55,6 +61,17 @@ public class MekanismCovers {
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(COVER);
+    }
+
+    public static void removeCover(Level world, BlockEntity tile, BlockState state, BlockPos pos, TileEntityTransmitterMixed transmitter) {
+        BlockState coverState = transmitter.mekanism_covers$getCoverState();
+        ItemStack currentStack = new ItemStack(MekanismCovers.COVER.get());
+        currentStack.getOrCreateTag().putString("CoverState", BlockStateParser.serialize(coverState));
+        Containers.dropItemStack(world, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, currentStack);
+        transmitter.mekanism_covers$setCoverState(null);
+        tile.setChanged();
+        world.sendBlockUpdated(pos, state, state, 3);
+        world.getLightEngine().checkBlock(pos);
     }
 
 }
