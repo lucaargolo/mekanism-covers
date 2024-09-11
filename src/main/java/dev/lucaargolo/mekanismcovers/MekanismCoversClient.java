@@ -22,6 +22,7 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class MekanismCoversClient {
 
+    public static boolean DISABLE_ADVANCED_LAYER = false;
     public static ShaderInstance COVER_SHADER;
     public static Uniform COVER_TRANSPARENCY;
 
@@ -42,6 +44,8 @@ public class MekanismCoversClient {
 
     @SubscribeEvent
     public static void registerShaders(RegisterShadersEvent event) throws IOException {
+        ModConfig.load();
+        DISABLE_ADVANCED_LAYER = ModConfig.getInstance().isDisableAdvancedLayer() || ModList.get().isLoaded("nvidium") || ModList.get().isLoaded("acedium");
         event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(MODID, "rendertype_cover"), DefaultVertexFormat.BLOCK), instance -> {
             COVER_TRANSPARENCY = instance.getUniform("CoverTransparency");
             COVER_SHADER = instance;

@@ -12,11 +12,7 @@
     "ConfiguratorModeMixin",
     "EntityCollisionContextAccessor",
     "ItemConfiguratorMixin",
-    "TileEntityTransmitterMixin",
-    "iris.CommonUniformsMixin",
-    "iris.CustomUniformsMixin",
-    "iris.IrisChunkProgramOverridesMixin",
-    "iris.IrisTerrainPassMixin"
+    "TileEntityTransmitterMixin"
   ],
   "client": [
     "LevelRendererMixin",
@@ -26,7 +22,11 @@
     "sodium.DefaultMaterialsMixin",
     "sodium.DefaultTerrainRenderPassesMixin",
     "sodium.ShaderChunkRendererMixin",
-    "sodium.SodiumWorldRendererMixin"
+    "sodium.SodiumWorldRendererMixin",
+    "iris.CommonUniformsMixin",
+    "iris.CustomUniformsMixin",
+    "iris.IrisChunkProgramOverridesMixin",
+    "iris.IrisTerrainPassMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -79,12 +79,16 @@ repositories {
     maven {
         url "https://cursemaven.com"
     }
+    flatDir {
+        dir 'libs'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("org.embeddedt:embeddium-${minecraft_version}:${embeddium_version}")
+    implementation fg.deobf("org.embeddedt:embeddium-${minecraft_version}:${embeddium_version}")
+    implementation fg.deobf("blank:acedium:0.2.7-beta")
     compileOnly fg.deobf("curse.maven:oculus-581495:5299671")
 
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")
@@ -92,6 +96,10 @@ dependencies {
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")
 
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+        jarJar.ranged(it, "[0.4.1,)")
+    }
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

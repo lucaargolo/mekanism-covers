@@ -2,6 +2,7 @@ package dev.lucaargolo.mekanismcovers.mixin;
 
 import dev.lucaargolo.mekanismcovers.CoverRenderType;
 import dev.lucaargolo.mekanismcovers.MekanismCovers;
+import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
 import mekanism.client.render.obj.TransmitterBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -39,7 +40,8 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
             BlockState coverState = extraData.get(MekanismCovers.COVER_STATE);
             if(coverState != null) {
                 BakedModel bakedModel = minecraft.getBlockRenderer().getBlockModel(coverState);
-                if(renderType == CoverRenderType.COVER) {
+                RenderType coverType = MekanismCoversClient.DISABLE_ADVANCED_LAYER ? RenderType.translucent() : CoverRenderType.COVER;
+                if(renderType == coverType) {
                     List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, extraData, renderType);
                     cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
                 }
@@ -53,7 +55,8 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
         if(extraData.has(MekanismCovers.COVER_STATE)) {
             BlockState coverState = extraData.get(MekanismCovers.COVER_STATE);
             if(coverState != null) {
-                cir.setReturnValue(ChunkRenderTypeSet.of(Stream.concat(cableSet.asList().stream(), Stream.of(CoverRenderType.COVER)).toList().toArray(new RenderType[0])));
+                RenderType coverType = MekanismCoversClient.DISABLE_ADVANCED_LAYER ? RenderType.translucent() : CoverRenderType.COVER;
+                cir.setReturnValue(ChunkRenderTypeSet.of(Stream.concat(cableSet.asList().stream(), Stream.of(coverType)).toList().toArray(new RenderType[0])));
             }
         }
     }
