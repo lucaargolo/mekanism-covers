@@ -12,7 +12,7 @@ public class CoverRenderType extends RenderType {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
 
-    private static final RenderStateShard.ShaderStateShard COVER_SHADER = new RenderStateShard.ShaderStateShard(() -> MekanismCovers.Client.COVER_SHADER);
+    private static final RenderStateShard.ShaderStateShard COVER_SHADER = new RenderStateShard.ShaderStateShard(() -> MekanismCoversClient.COVER_SHADER);
 
     public static final RenderType COVER = create("cover", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 2097152, true, true,
             RenderType.CompositeState.builder()

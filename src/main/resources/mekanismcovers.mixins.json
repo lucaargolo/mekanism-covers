@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "dev.lucaargolo.mekanismcovers.mixin",
   "compatibilityLevel": "JAVA_8",
+  "plugin": "dev.lucaargolo.mekanismcovers.CompatMixinPlugin",
   "refmap": "mekanismcovers.refmap.json",
   "mixins": [
     "BlockMekanismMixin",
@@ -12,7 +13,11 @@
     "EntityCollisionContextAccessor",
     "ItemConfiguratorMixin",
     "TileEntityTransmitterMixin",
-    "TransmitterBakedModelMixin"
+    "TransmitterBakedModelMixin",
+    "sodium.DefaultMaterialsMixin",
+    "sodium.DefaultTerrainRenderPassesMixin",
+    "sodium.ShaderChunkRendererMixin",
+    "sodium.SodiumWorldRendererMixin"
   ],
   "client": [
     "LevelRendererMixin",

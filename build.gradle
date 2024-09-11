@@ -81,6 +81,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    implementation fg.deobf("org.embeddedt:embeddium-${minecraft_version}:${embeddium_version}")
+
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
