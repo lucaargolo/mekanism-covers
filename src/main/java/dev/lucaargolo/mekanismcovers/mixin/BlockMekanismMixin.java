@@ -25,12 +25,7 @@ public class BlockMekanismMixin {
         if((!state.is(newState.getBlock()) || !newState.getFluidState().isEmpty()) && (Object) this instanceof BlockTransmitter) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if(blockEntity instanceof TileEntityTransmitterMixed transmitter && transmitter.mekanism_covers$getCoverState() != null) {
-                BlockState coverState = transmitter.mekanism_covers$getCoverState();
-                ItemStack stack = new ItemStack(MekanismCovers.COVER.get());
-                stack.getOrCreateTag().putString("CoverState", BlockStateParser.serialize(coverState));
-                Containers.dropItemStack(world, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, stack);
-                transmitter.mekanism_covers$setCoverState(null);
-                blockEntity.setChanged();
+                MekanismCovers.removeCover(world, blockEntity, state, pos, transmitter);
             }
         }
     }

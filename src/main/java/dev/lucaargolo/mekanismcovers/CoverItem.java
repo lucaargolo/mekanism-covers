@@ -12,21 +12,17 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class CoverItem extends Item {
@@ -51,14 +48,12 @@ public class CoverItem extends Item {
         BlockState state = level.getBlockState(pos);
         BlockEntity entity = level.getBlockEntity(pos);
         ItemStack stack = pContext.getItemInHand();
-        BlockState coverState = getState(level, stack);
-        if(coverState != null && entity instanceof TileEntityTransmitterMixed transmitter) {
+        Block coverBlock = getBlock(stack);
+        if(coverBlock != null && entity instanceof TileEntityTransmitterMixed transmitter) {
+            BlockState coverState = coverBlock.getStateForPlacement(new BlockPlaceContext(pContext));
             if(!level.isClientSide) {
                 if (transmitter.mekanism_covers$getCoverState() != null) {
-                    BlockState currentState = transmitter.mekanism_covers$getCoverState();
-                    ItemStack currentStack = new ItemStack(MekanismCovers.COVER.get());
-                    currentStack.getOrCreateTag().putString("CoverState", BlockStateParser.serialize(currentState));
-                    Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, currentStack);
+                    MekanismCovers.removeCover(level, entity, state, pos, transmitter);
                 }
                 transmitter.mekanism_covers$setCoverState(coverState);
                 entity.setChanged();
@@ -78,26 +73,25 @@ public class CoverItem extends Item {
     public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         if(pLevel != null) {
-            BlockState coverState = getState(pLevel, pStack);
-            if(coverState == null) {
+            Block coverBlock = getBlock(pStack);
+            if(coverBlock == null) {
                 pTooltipComponents.add(Component.translatable("text.mekanismcovers.empty").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
             }else{
-                pTooltipComponents.add(coverState.getBlock().getName().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+                pTooltipComponents.add(coverBlock.getName().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
             }
 
         }
     }
 
     @Nullable
-    public static BlockState getState(Level level, ItemStack stack) {
-        if(!stack.hasTag()) {
+    public static Block getBlock(ItemStack stack) {
+        if(!stack.hasTag() || !Objects.requireNonNull(stack.getTag()).contains("CoverBlockItem")) {
             return null;
         }else{
-            try {
-                String serialized = stack.getOrCreateTag().getString("CoverState");
-                BlockStateParser.BlockResult result = BlockStateParser.parseForBlock(level.holderLookup(Registries.BLOCK), serialized, false);
-                return result.blockState();
-            }catch (Exception exception) {
+            ItemStack coverBlockItem = ItemStack.of(stack.getOrCreateTag().getCompound("CoverBlockItem"));
+            if(coverBlockItem.getItem() instanceof BlockItem blockItem) {
+                return blockItem.getBlock();
+            }else{
                 return null;
             }
         }
@@ -115,14 +109,16 @@ public class CoverItem extends Item {
 
                     @Override
                     public void renderByItem(@NotNull ItemStack pStack, @NotNull ItemDisplayContext pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-                        BlockState coverState = CoverItem.getState(minecraft.level, pStack);
+                        Block coverBlock = CoverItem.getBlock(pStack);
                         boolean transparent = true;
                         BakedModel coverStateModel;
-                        if(coverState == null) {
+                        BlockState coverState;
+                        if(coverBlock == null) {
                             coverState = Blocks.AIR.defaultBlockState();
                             coverStateModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
                             transparent = false;
                         }else{
+                            coverState = coverBlock.defaultBlockState();
                             coverStateModel = minecraft.getBlockRenderer().getBlockModel(coverState);
                         }
                         BlockState state = Blocks.AIR.defaultBlockState();
