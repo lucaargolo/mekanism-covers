@@ -34,7 +34,6 @@ public class ConfiguratorModeMixin {
 
         // add new value
         ItemConfigurator.ConfiguratorMode newValue = invokeInit("COVER", last.ordinal() + 1, () -> "item.mekanismcovers.cover", null, EnumColor.WHITE, false, new ResourceLocation(MekanismCovers.MODID, "textures/gui/cover.png"));
-        System.out.println(newValue);
         values.add(newValue);
 
         $VALUES = values.toArray(new ItemConfigurator.ConfiguratorMode[0]);

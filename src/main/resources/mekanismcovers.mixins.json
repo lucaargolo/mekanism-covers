@@ -13,16 +13,20 @@
     "EntityCollisionContextAccessor",
     "ItemConfiguratorMixin",
     "TileEntityTransmitterMixin",
+    "iris.CommonUniformsMixin",
+    "iris.CustomUniformsMixin",
+    "iris.IrisChunkProgramOverridesMixin",
+    "iris.IrisTerrainPassMixin"
+  ],
+  "client": [
+    "LevelRendererMixin",
+    "RenderTypeAccessor",
+    "RenderTypeMixin",
     "TransmitterBakedModelMixin",
     "sodium.DefaultMaterialsMixin",
     "sodium.DefaultTerrainRenderPassesMixin",
     "sodium.ShaderChunkRendererMixin",
     "sodium.SodiumWorldRendererMixin"
-  ],
-  "client": [
-    "LevelRendererMixin",
-    "RenderTypeAccessor",
-    "RenderTypeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

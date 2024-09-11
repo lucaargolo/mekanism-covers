@@ -10,6 +10,7 @@ import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.registries.MekanismItems;
 import mekanism.common.tile.transmitter.TileEntityTransmitter;
 import mekanism.common.util.WorldUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
@@ -64,7 +65,8 @@ public class MekanismCoversClient {
         }, transmitters);
     }
 
-    public static float getTransparency(LocalPlayer player) {
+    public static float getTransparency() {
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             ItemStack mainStack = player.getMainHandItem();
             ItemStack offStack = player.getOffhandItem();
@@ -80,9 +82,9 @@ public class MekanismCoversClient {
         }
     }
 
-    public static void updateTransparency(LocalPlayer player) {
+    public static void updateTransparency() {
         if(COVER_TRANSPARENCY != null) {
-            COVER_TRANSPARENCY.set(getTransparency(player));
+            COVER_TRANSPARENCY.set(getTransparency());
         }
     }
 }

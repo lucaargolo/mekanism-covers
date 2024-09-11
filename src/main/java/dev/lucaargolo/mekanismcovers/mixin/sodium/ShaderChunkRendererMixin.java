@@ -48,7 +48,7 @@ public abstract class ShaderChunkRendererMixin {
     public void updateCoverUniform(TerrainRenderPass pass, CallbackInfo ci) {
         if(pass == CustomTerrainRenderPasses.COVER) {
             if(mekanism_covers$coverTransparencyUniform != null) {
-                mekanism_covers$coverTransparencyUniform.set(MekanismCoversClient.getTransparency(Minecraft.getInstance().player));
+                mekanism_covers$coverTransparencyUniform.set(MekanismCoversClient.getTransparency());
             }
         }
     }
