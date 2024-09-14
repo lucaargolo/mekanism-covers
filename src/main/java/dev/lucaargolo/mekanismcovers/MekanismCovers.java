@@ -53,7 +53,7 @@ public class MekanismCovers {
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(COVER);
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(EMPTY_COVER);
     }
 
     public static void removeCover(Level world, BlockEntity tile, BlockState state, BlockPos pos, TileEntityTransmitterMixed transmitter) {
