@@ -30,6 +30,10 @@ public class ModConfig {
         return disableAdvancedLayer;
     }
 
+    public void setDisableAdvancedLayer(boolean disableAdvancedLayer) {
+        this.disableAdvancedLayer = disableAdvancedLayer;
+    }
+
     public void save() {
         try (FileWriter writer = new FileWriter(CONFIG_PATH)) {
             GSON.toJson(this, writer);

@@ -8,7 +8,6 @@ import me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer;
 import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
 import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderOptions;
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
-import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,7 +47,7 @@ public abstract class ShaderChunkRendererMixin {
     public void updateCoverUniform(TerrainRenderPass pass, CallbackInfo ci) {
         if(pass == CustomTerrainRenderPasses.COVER) {
             if(mekanism_covers$coverTransparencyUniform != null) {
-                mekanism_covers$coverTransparencyUniform.set(MekanismCoversClient.getTransparency());
+                mekanism_covers$coverTransparencyUniform.set(MekanismCoversClient.getShaderTransparency());
             }
         }
     }

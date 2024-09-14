@@ -21,7 +21,6 @@ public abstract class LevelRendererMixin {
 
     @Shadow protected abstract void renderChunkLayer(RenderType pRenderType, PoseStack pPoseStack, double pCamX, double pCamY, double pCamZ, Matrix4f pProjectionMatrix);
 
-    @Shadow @Final private Minecraft minecraft;
     @Unique
     boolean mekanism_covers$isRenderingCover = false;
 
@@ -29,7 +28,7 @@ public abstract class LevelRendererMixin {
     public void renderCover(RenderType pRenderType, PoseStack pPoseStack, double pCamX, double pCamY, double pCamZ, Matrix4f pProjectionMatrix, CallbackInfo ci) {
         if(pRenderType == RenderType.translucent()) {
             mekanism_covers$isRenderingCover = true;
-            MekanismCoversClient.updateTransparency();
+            MekanismCoversClient.updateShaderTransparency();
             renderChunkLayer(CoverRenderType.COVER, pPoseStack, pCamX, pCamY, pCamZ, pProjectionMatrix);
             mekanism_covers$isRenderingCover = false;
         }

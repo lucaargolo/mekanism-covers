@@ -16,17 +16,18 @@
   ],
   "client": [
     "LevelRendererMixin",
+    "MinecraftMixin",
     "RenderTypeAccessor",
     "RenderTypeMixin",
     "TransmitterBakedModelMixin",
-    "sodium.DefaultMaterialsMixin",
-    "sodium.DefaultTerrainRenderPassesMixin",
-    "sodium.ShaderChunkRendererMixin",
-    "sodium.SodiumWorldRendererMixin",
     "iris.CommonUniformsMixin",
     "iris.CustomUniformsMixin",
     "iris.IrisChunkProgramOverridesMixin",
-    "iris.IrisTerrainPassMixin"
+    "iris.IrisTerrainPassMixin",
+    "sodium.DefaultMaterialsMixin",
+    "sodium.DefaultTerrainRenderPassesMixin",
+    "sodium.ShaderChunkRendererMixin",
+    "sodium.SodiumWorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

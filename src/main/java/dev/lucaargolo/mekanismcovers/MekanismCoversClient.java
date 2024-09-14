@@ -14,7 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,7 +25,6 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 import java.io.IOException;
@@ -33,9 +35,11 @@ import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class MekanismCoversClient {
 
-    public static boolean DISABLE_ADVANCED_LAYER = false;
+    public static boolean DISABLE_ADVANCED_LAYER = ModConfig.getInstance().isDisableAdvancedLayer();
     public static ShaderInstance COVER_SHADER;
     public static Uniform COVER_TRANSPARENCY;
+
+    private static boolean lastTransparency = false;
 
     @SubscribeEvent
     public static void registerCoverModel(ModelEvent.RegisterAdditional event) {
@@ -44,8 +48,6 @@ public class MekanismCoversClient {
 
     @SubscribeEvent
     public static void registerShaders(RegisterShadersEvent event) throws IOException {
-        ModConfig.load();
-        DISABLE_ADVANCED_LAYER = ModConfig.getInstance().isDisableAdvancedLayer() || ModList.get().isLoaded("nvidium") || ModList.get().isLoaded("acedium");
         event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(MODID, "rendertype_cover"), DefaultVertexFormat.BLOCK), instance -> {
             COVER_TRANSPARENCY = instance.getUniform("CoverTransparency");
             COVER_SHADER = instance;
@@ -69,26 +71,69 @@ public class MekanismCoversClient {
         }, transmitters);
     }
 
-    public static float getTransparency() {
+    public static void updateCoverTransparency() {
+        boolean transparency = isCoverTransparent();
+        if(transparency != lastTransparency) {
+            var client = Minecraft.getInstance();
+            if (client.player == null || client.level == null) {
+                return;
+            }
+
+            var viewDistance = (int) Math.ceil(client.levelRenderer.getLastViewDistance());
+            ChunkPos.rangeClosed(client.player.chunkPosition(), viewDistance).forEach(chunkPos -> {
+                var chunk = client.level.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z);
+                if (chunk != null) {
+                    for (var i = 0; i < chunk.getSectionsCount(); i++) {
+                        var section = chunk.getSection(i);
+                        if (section.maybeHas(state -> state.getBlock() instanceof BlockTransmitter)) {
+                            client.levelRenderer.setSectionDirty(chunkPos.x, chunk.getSectionYFromSectionIndex(i), chunkPos.z);
+                        }
+                    }
+                }
+            });
+        }
+        lastTransparency = transparency;
+
+    }
+
+    public static boolean isCoverTransparent() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             ItemStack mainStack = player.getMainHandItem();
             ItemStack offStack = player.getOffhandItem();
-            if (mainStack.is(MekanismItems.CONFIGURATOR.get())) {
-                return MekanismItems.CONFIGURATOR.get().getMode(mainStack) == ItemConfigurator.ConfiguratorMode.valueOf("COVER") ? 1.0f : 0.25f;
-            } else if (offStack.is(MekanismItems.CONFIGURATOR.get())) {
-                return MekanismItems.CONFIGURATOR.get().getMode(offStack) == ItemConfigurator.ConfiguratorMode.valueOf("COVER") ? 1.0f : 0.25f;
-            } else {
-                return 1.0f;
+            ItemStack[] stacks = new ItemStack[] { mainStack, offStack };
+            boolean transparent = false;
+            for (ItemStack stack : stacks) {
+                if(stack.is(MekanismItems.CONFIGURATOR.get())) {
+                    ItemConfigurator.ConfiguratorMode mode = MekanismItems.CONFIGURATOR.get().getMode(mainStack);
+                    if(mode != ItemConfigurator.ConfiguratorMode.valueOf("COVER")) {
+                        transparent = true;
+                        break;
+                    }
+                }else {
+                    Item item = stack.getItem();
+                    if(item instanceof BlockItem blockItem) {
+                        Block block = blockItem.getBlock();
+                        if(block instanceof BlockTransmitter) {
+                            transparent = true;
+                            break;
+                        }
+                    }
+                }
             }
+            return transparent;
         } else {
-            return 1.0f;
+            return false;
         }
     }
 
-    public static void updateTransparency() {
+    public static float getShaderTransparency() {
+        return isCoverTransparent() ? 0.333f : 1.0f;
+    }
+
+    public static void updateShaderTransparency() {
         if(COVER_TRANSPARENCY != null) {
-            COVER_TRANSPARENCY.set(getTransparency());
+            COVER_TRANSPARENCY.set(getShaderTransparency());
         }
     }
 }

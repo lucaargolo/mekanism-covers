@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.BakedModelWrapper;
@@ -40,10 +41,25 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
             BlockState coverState = extraData.get(MekanismCovers.COVER_STATE);
             if(coverState != null) {
                 BakedModel bakedModel = minecraft.getBlockRenderer().getBlockModel(coverState);
-                RenderType coverType = MekanismCoversClient.DISABLE_ADVANCED_LAYER ? RenderType.translucent() : CoverRenderType.COVER;
-                if(renderType == coverType) {
-                    List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, extraData, renderType);
-                    cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
+                boolean transparent = MekanismCoversClient.isCoverTransparent();
+                if(transparent) {
+                    if(!MekanismCoversClient.DISABLE_ADVANCED_LAYER) {
+                        if (renderType == CoverRenderType.COVER) {
+                            List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, extraData, renderType);
+                            cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
+                        }
+                    }else{
+                        if(renderType == RenderType.translucent()) {
+                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                            List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
+                            cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
+                        }
+                    }
+                }else{
+                    if(bakedModel.getRenderTypes(coverState, rand, ModelData.EMPTY).contains(renderType)) {
+                        List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, extraData, renderType);
+                        cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
+                    }
                 }
             }
         }
@@ -55,8 +71,19 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
         if(extraData.has(MekanismCovers.COVER_STATE)) {
             BlockState coverState = extraData.get(MekanismCovers.COVER_STATE);
             if(coverState != null) {
-                RenderType coverType = MekanismCoversClient.DISABLE_ADVANCED_LAYER ? RenderType.translucent() : CoverRenderType.COVER;
-                cir.setReturnValue(ChunkRenderTypeSet.of(Stream.concat(cableSet.asList().stream(), Stream.of(coverType)).toList().toArray(new RenderType[0])));
+                boolean transparent = MekanismCoversClient.isCoverTransparent();
+                if(transparent) {
+                    if(!MekanismCoversClient.DISABLE_ADVANCED_LAYER) {
+                        cir.setReturnValue(ChunkRenderTypeSet.of(Stream.concat(cableSet.asList().stream(), Stream.of(CoverRenderType.COVER)).toList().toArray(new RenderType[0])));
+                    }else{
+                        cir.setReturnValue(ChunkRenderTypeSet.of(Stream.concat(cableSet.asList().stream(), Stream.of(RenderType.translucent())).toList().toArray(new RenderType[0])));
+                    }
+                }else{
+                    Minecraft minecraft = Minecraft.getInstance();
+                    BakedModel bakedModel = minecraft.getBlockRenderer().getBlockModel(coverState);
+                    ChunkRenderTypeSet coverSet = bakedModel.getRenderTypes(coverState, rand, ModelData.EMPTY);
+                    cir.setReturnValue(ChunkRenderTypeSet.of(Stream.concat(cableSet.asList().stream(), coverSet.asList().stream()).toList().toArray(new RenderType[0])));
+                }
             }
         }
     }

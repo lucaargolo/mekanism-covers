@@ -16,7 +16,7 @@ public class CommonUniformsMixin {
 
     @Inject(at = @At("TAIL"), method = "generalCommonUniforms")
     private static void addCoverTransparencyUniform(UniformHolder uniforms, FrameUpdateNotifier updateNotifier, PackDirectives directives, CallbackInfo ci) {
-        uniforms.uniform1f(UniformUpdateFrequency.PER_FRAME, "mkcv_CoverTransparency", MekanismCoversClient::getTransparency);
+        uniforms.uniform1f(UniformUpdateFrequency.PER_FRAME, "mkcv_CoverTransparency", MekanismCoversClient::getShaderTransparency);
     }
 
 }

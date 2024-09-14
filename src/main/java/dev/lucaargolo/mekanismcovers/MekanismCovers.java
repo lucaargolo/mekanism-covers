@@ -28,11 +28,6 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod(MekanismCovers.MODID)
 public class MekanismCovers {
 
-    /*
-    * TODO:
-    *  - Fix Nvidium compatibility.
-    * */
-
     public static final String MODID = "mekanismcovers";
 
     public static final ModelProperty<BlockState> COVER_STATE = new ModelProperty<>();
