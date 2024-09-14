@@ -34,7 +34,7 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
                 System.out.println("cover rendering will be disabled.                                 ");
                 System.out.println("                                                                  ");
                 System.out.println("Holding a wrench/cable in your hand will no longer make covers get");
-                System.out.println("translucent. They will instead just disappear.                    ");
+                System.out.println("translucent. They will instead show an alternative model.         ");
                 System.out.println("==================================================================");
                 ModConfig.getInstance().setDisableAdvancedLayer(true);
             }
