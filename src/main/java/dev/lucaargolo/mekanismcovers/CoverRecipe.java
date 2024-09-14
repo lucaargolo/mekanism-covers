@@ -1,6 +1,5 @@
 package dev.lucaargolo.mekanismcovers;
 
-import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;

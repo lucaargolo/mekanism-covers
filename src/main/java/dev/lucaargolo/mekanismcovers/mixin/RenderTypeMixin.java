@@ -2,7 +2,6 @@ package dev.lucaargolo.mekanismcovers.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.lucaargolo.mekanismcovers.CoverRenderType;
-import dev.lucaargolo.mekanismcovers.MekanismCovers;
 import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
