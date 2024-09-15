@@ -13,9 +13,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.neoforged.neoforge.client.model.BakedModelWrapper;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
         super(originalModel);
     }
 
-    @Inject(at = @At("RETURN"), method = "getQuads(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;Lnet/minecraftforge/client/model/data/ModelData;Lnet/minecraft/client/renderer/RenderType;)Ljava/util/List;", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "getQuads(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;Lnet/minecraft/client/renderer/RenderType;)Ljava/util/List;", cancellable = true)
     public void injectCoverModel(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType renderType, CallbackInfoReturnable<List<BakedQuad>> cir) {
         List<BakedQuad> originalQuads = cir.getReturnValue();
         if(extraData.has(MekanismCovers.COVER_STATE)) {
@@ -65,7 +65,7 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
         }
     }
 
-    @Inject(at = @At("RETURN"), method = "getRenderTypes(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Lnet/minecraftforge/client/model/data/ModelData;)Lnet/minecraftforge/client/ChunkRenderTypeSet;", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "getRenderTypes(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;)Lnet/neoforged/neoforge/client/ChunkRenderTypeSet;", cancellable = true)
     public void injectCoverRenderTypes(BlockState state, RandomSource rand, ModelData extraData, CallbackInfoReturnable<ChunkRenderTypeSet> cir) {
         ChunkRenderTypeSet cableSet = cir.getReturnValue();
         if(extraData.has(MekanismCovers.COVER_STATE)) {

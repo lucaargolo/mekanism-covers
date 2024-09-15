@@ -1,83 +1,72 @@
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
 plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '1.0.17'
 }
 
-apply plugin: 'org.spongepowered.mixin'
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
 
-group = mod_group_id
 version = mod_version
+group = mod_group_id
 
 base {
     archivesName = mod_id
 }
 
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-minecraft {
+neoForge {
+    version = project.neo_version
 
-    mappings channel: 'parchment', version: '2023.09.03-1.20.1'
-    copyIdeResources = true
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
 
+    // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
-        // applies to all the run configs below
-        configureEach {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
         client {
-            property 'forge.enabledGameTestNamespaces', mod_id
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
         server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
     }
-}
 
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
-
-    config "${mod_id}.mixins.json"
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
 repositories {
+    mavenLocal()
     maven {
         name = "Mod Maven"
         url = 'https://modmaven.dev/'
     }
     maven {
-        url "https://cursemaven.com"
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
     }
     flatDir {
         dir 'libs'
@@ -85,49 +74,59 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compileOnly("maven.modrinth:sodium:${sodium_version}")
+    compileOnly("maven.modrinth:iris:${iris_version}")
 
-    compileOnly fg.deobf("org.embeddedt:embeddium-${minecraft_version}:${embeddium_version}")
-    compileOnly fg.deobf("curse.maven:oculus-581495:5299671")
-
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation("mekanism:Mekanism:${mekanism_version}")
+    implementation("mekanism:Mekanism:${mekanism_version}:additions")
+    implementation("mekanism:Mekanism:${mekanism_version}:generators")
+    implementation("mekanism:Mekanism:${mekanism_version}:tools")
 }
 
-tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-                             forge_version       : forge_version, forge_version_range: forge_version_range,
-                             loader_version_range: loader_version_range,
-                             mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-                             mod_authors         : mod_authors, mod_description: mod_description,]
-
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description
+    ]
     inputs.properties replaceProperties
-
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
 }
 
-// Example for how to get properties into the manifest for reading at runtime.
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes(["Specification-Title"     : mod_id,
-                    "Specification-Vendor"    : mod_authors,
-                    "Specification-Version"   : "1", // We are version 1 of ourselves
-                    "Implementation-Title"    : project.name,
-                    "Implementation-Version"  : project.jar.archiveVersion,
-                    "Implementation-Vendor"   : mod_authors,
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
-    }
 
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }

@@ -1,10 +1,10 @@
 package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lucaargolo.mekanismcovers.sodium.CustomTerrainRenderPasses;
-import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.ChunkRenderMatrices;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager;
+
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
+import net.caffeinemc.mods.sodium.client.render.chunk.ChunkRenderMatrices;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
 import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,10 +17,9 @@ public abstract class SodiumWorldRendererMixin {
 
     @Shadow private RenderSectionManager renderSectionManager;
 
-    @Inject(at = @At("HEAD"), method = "drawChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDD)V")
-    public void renderCover(RenderType renderLayer, PoseStack matrixStack, double x, double y, double z, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "drawChunkLayer")
+    public void renderCover(RenderType renderLayer, ChunkRenderMatrices matrices, double x, double y, double z, CallbackInfo ci) {
         if(renderLayer == RenderType.translucent()) {
-            ChunkRenderMatrices matrices = ChunkRenderMatrices.from(matrixStack);
             this.renderSectionManager.renderLayer(matrices, CustomTerrainRenderPasses.COVER, x, y, z);
         }
     }

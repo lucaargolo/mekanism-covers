@@ -26,14 +26,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 public class CoverItem extends Item {
 
@@ -70,113 +70,102 @@ public class CoverItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        if(pLevel != null) {
-            Block coverBlock = getBlock(pStack);
-            if(coverBlock == null) {
-                pTooltipComponents.add(Component.translatable("text.mekanismcovers.empty").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
-            }else{
-                pTooltipComponents.add(coverBlock.getName().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
-            }
-
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        Block coverBlock = getBlock(stack);
+        if(coverBlock != null) {
+            tooltipComponents.add(coverBlock.getName().withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+        }else{
+            tooltipComponents.add(Component.translatable("text.mekanismcovers.empty").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }
     }
 
     @Nullable
     public static Block getBlock(ItemStack stack) {
-        if(!stack.hasTag() || !Objects.requireNonNull(stack.getTag()).contains("CoverBlockItem")) {
+        if(!stack.has(MekanismCovers.COVER_BLOCK)) {
             return null;
         }else{
-            ItemStack coverBlockItem = ItemStack.of(stack.getOrCreateTag().getCompound("CoverBlockItem"));
-            if(coverBlockItem.getItem() instanceof BlockItem blockItem) {
-                return blockItem.getBlock();
-            }else{
-                return null;
-            }
+            return MekanismCovers.getBlock(stack.get(MekanismCovers.COVER_BLOCK));
         }
     }
 
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
+    @OnlyIn(Dist.CLIENT)
+    public static class CoverItemExtensions implements IClientItemExtensions {
 
+        @Override
+        public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
+            Minecraft minecraft = Minecraft.getInstance();
+            return new BlockEntityWithoutLevelRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels()) {
 
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Minecraft minecraft = Minecraft.getInstance();
-                return new BlockEntityWithoutLevelRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels()) {
+                @Override
+                public void renderByItem(@NotNull ItemStack pStack, @NotNull ItemDisplayContext pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+                    Block coverBlock = CoverItem.getBlock(pStack);
+                    boolean transparent = true;
+                    BakedModel coverStateModel;
+                    BlockState coverState;
+                    if(coverBlock == null) {
+                        coverState = Blocks.AIR.defaultBlockState();
+                        coverStateModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                        transparent = false;
+                    }else{
+                        coverState = coverBlock.defaultBlockState();
+                        coverStateModel = minecraft.getBlockRenderer().getBlockModel(coverState);
+                    }
+                    BlockState state = Blocks.AIR.defaultBlockState();
+                    BakedModel coverModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
 
-                    @Override
-                    public void renderByItem(@NotNull ItemStack pStack, @NotNull ItemDisplayContext pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-                        Block coverBlock = CoverItem.getBlock(pStack);
-                        boolean transparent = true;
-                        BakedModel coverStateModel;
-                        BlockState coverState;
-                        if(coverBlock == null) {
-                            coverState = Blocks.AIR.defaultBlockState();
-                            coverStateModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
-                            transparent = false;
-                        }else{
-                            coverState = coverBlock.defaultBlockState();
-                            coverStateModel = minecraft.getBlockRenderer().getBlockModel(coverState);
-                        }
-                        BlockState state = Blocks.AIR.defaultBlockState();
-                        BakedModel coverModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                    RenderType renderType = transparent ? RenderType.entityTranslucentCull(InventoryMenu.BLOCK_ATLAS) : RenderType.entitySolid(InventoryMenu.BLOCK_ATLAS);
+                    VertexConsumer consumer = pBuffer.getBuffer(renderType);
 
-                        RenderType renderType = transparent ? RenderType.entityTranslucentCull(InventoryMenu.BLOCK_ATLAS) : RenderType.entitySolid(InventoryMenu.BLOCK_ATLAS);
-                        VertexConsumer consumer = pBuffer.getBuffer(renderType);
+                    PoseStack.Pose pose = pPoseStack.last();
+                    RandomSource random = RandomSource.create();
 
-                        PoseStack.Pose pose = pPoseStack.last();
-                        RandomSource random = RandomSource.create();
+                    for(Direction direction : Direction.values()) {
+                        random.setSeed(42L);
+                        renderQuadList(coverState, pose, consumer, coverStateModel.getQuads(coverState, direction, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
+                    }
 
+                    random.setSeed(42L);
+                    renderQuadList(coverState, pose, consumer, coverStateModel.getQuads(coverState, null, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
+
+                    if(coverStateModel != coverModel) {
                         for(Direction direction : Direction.values()) {
                             random.setSeed(42L);
-                            renderQuadList(coverState, pose, consumer, coverStateModel.getQuads(coverState, direction, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
+                            renderQuadList(state, pose, consumer, coverModel.getQuads(state, direction, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
                         }
 
                         random.setSeed(42L);
-                        renderQuadList(coverState, pose, consumer, coverStateModel.getQuads(coverState, null, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
-
-                        if(coverStateModel != coverModel) {
-                            for(Direction direction : Direction.values()) {
-                                random.setSeed(42L);
-                                renderQuadList(state, pose, consumer, coverModel.getQuads(state, direction, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
-                            }
-
-                            random.setSeed(42L);
-                            renderQuadList(state, pose, consumer, coverModel.getQuads(state, null, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
-                        }
+                        renderQuadList(state, pose, consumer, coverModel.getQuads(state, null, random, ModelData.EMPTY, renderType), pPackedLight, pPackedOverlay);
                     }
+                }
 
-                    private void renderQuadList(BlockState state, PoseStack.Pose pose, VertexConsumer consumer, List<BakedQuad> bakedQuads, int light, int overlay) {
-                        for(BakedQuad quad : bakedQuads) {
-                            float f;
-                            float f1;
-                            float f2;
-                            if (minecraft.level != null && quad.isTinted()) {
-                                BlockPos pos = BlockPos.ZERO;
-                                if(minecraft.player != null) {
-                                    pos = minecraft.player.blockPosition();
-                                }
-                                int i = minecraft.getBlockColors().getColor(state, minecraft.level, pos, quad.getTintIndex());
-                                f = (float)(i >> 16 & 255) / 255.0F;
-                                f1 = (float)(i >> 8 & 255) / 255.0F;
-                                f2 = (float)(i & 255) / 255.0F;
-                            } else {
-                                f = 1.0F;
-                                f1 = 1.0F;
-                                f2 = 1.0F;
+                private void renderQuadList(BlockState state, PoseStack.Pose pose, VertexConsumer consumer, List<BakedQuad> bakedQuads, int light, int overlay) {
+                    for(BakedQuad quad : bakedQuads) {
+                        float f;
+                        float f1;
+                        float f2;
+                        if (minecraft.level != null && quad.isTinted()) {
+                            BlockPos pos = BlockPos.ZERO;
+                            if(minecraft.player != null) {
+                                pos = minecraft.player.blockPosition();
                             }
-
-                            consumer.putBulkData(pose, quad, f, f1, f2, light, overlay);
+                            int i = minecraft.getBlockColors().getColor(state, minecraft.level, pos, quad.getTintIndex());
+                            f = (float)(i >> 16 & 255) / 255.0F;
+                            f1 = (float)(i >> 8 & 255) / 255.0F;
+                            f2 = (float)(i & 255) / 255.0F;
+                        } else {
+                            f = 1.0F;
+                            f1 = 1.0F;
+                            f2 = 1.0F;
                         }
+
+                        consumer.putBulkData(pose, quad, f, f1, f2, 1f, light, overlay);
                     }
-                };
+                }
+            };
 
-            }
+        }
 
 
-        });
     }
 }

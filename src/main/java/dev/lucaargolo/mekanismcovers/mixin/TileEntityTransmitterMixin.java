@@ -9,13 +9,13 @@ import mekanism.common.tile.base.CapabilityTileEntity;
 import mekanism.common.tile.transmitter.TileEntityTransmitter;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +35,7 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
         super(type, pos, state);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"DataFlowIssue", "rawtypes", "unchecked"})
     @Inject(at = @At("RETURN"), method = "getModelData", cancellable = true, remap = false)
     public void injectCoverModel(CallbackInfoReturnable<ModelData> cir) {
         ModelData data = cir.getReturnValue();
@@ -50,17 +50,16 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
     }
 
     @Inject(at = @At("TAIL"), method = "saveAdditional")
-    public void injectSaveCover(@NotNull CompoundTag nbtTags, CallbackInfo ci) {
+    public void injectSaveCover(CompoundTag nbtTags, HolderLookup.Provider provider, CallbackInfo ci) {
         if(this.mekanism_covers$coverState != null) {
             nbtTags.putString("CoverState", BlockStateParser.serialize(this.mekanism_covers$coverState));
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @Inject(at = @At("TAIL"), method = "load")
-    public void injectLoad(@NotNull CompoundTag nbtTags, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "loadAdditional")
+    public void injectLoad(CompoundTag nbt, HolderLookup.Provider provider, CallbackInfo ci) {
         try {
-            String serialized = nbtTags.getString("CoverState");
+            String serialized = nbt.getString("CoverState");
             BlockStateParser.BlockResult result = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), serialized, false);
             this.mekanism_covers$coverState = result.blockState();
             if(this.level != null) {
@@ -80,11 +79,10 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
         cir.setReturnValue(nbtTags);
     }
 
-    @SuppressWarnings("deprecation")
     @Inject(at = @At("TAIL"), method = "handleUpdateTag", remap = false)
-    public void injectUpdateTag(@NotNull CompoundTag nbtTags, CallbackInfo ci) {
+    public void injectUpdateTag(CompoundTag tag, HolderLookup.Provider provider, CallbackInfo ci) {
         try {
-            String serialized = nbtTags.getString("CoverState");
+            String serialized = tag.getString("CoverState");
             BlockStateParser.BlockResult result = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), serialized, false);
             this.mekanism_covers$coverState = result.blockState();
             this.mekanism_covers$updateClientLight = true;

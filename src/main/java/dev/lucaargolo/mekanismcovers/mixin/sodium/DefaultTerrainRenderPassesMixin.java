@@ -1,8 +1,8 @@
 package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
 import dev.lucaargolo.mekanismcovers.sodium.CustomTerrainRenderPasses;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.DefaultTerrainRenderPasses;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
+import net.caffeinemc.mods.sodium.client.render.chunk.terrain.DefaultTerrainRenderPasses;
+import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

@@ -2,9 +2,9 @@ package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
 import dev.lucaargolo.mekanismcovers.CoverRenderType;
 import dev.lucaargolo.mekanismcovers.sodium.CustomTerrainRenderPasses;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.DefaultMaterials;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.parameters.AlphaCutoffParameter;
+import net.caffeinemc.mods.sodium.client.render.chunk.terrain.material.DefaultMaterials;
+import net.caffeinemc.mods.sodium.client.render.chunk.terrain.material.Material;
+import net.caffeinemc.mods.sodium.client.render.chunk.terrain.material.parameters.AlphaCutoffParameter;
 import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

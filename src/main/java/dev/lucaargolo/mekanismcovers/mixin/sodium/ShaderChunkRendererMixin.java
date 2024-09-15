@@ -2,12 +2,13 @@ package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
 import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
 import dev.lucaargolo.mekanismcovers.sodium.CustomTerrainRenderPasses;
-import me.jellysquid.mods.sodium.client.gl.shader.GlProgram;
-import me.jellysquid.mods.sodium.client.gl.shader.uniform.GlUniformFloat;
-import me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
-import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderOptions;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
+
+import net.caffeinemc.mods.sodium.client.gl.shader.GlProgram;
+import net.caffeinemc.mods.sodium.client.gl.shader.uniform.GlUniformFloat;
+import net.caffeinemc.mods.sodium.client.render.chunk.ShaderChunkRenderer;
+import net.caffeinemc.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
+import net.caffeinemc.mods.sodium.client.render.chunk.shader.ChunkShaderOptions;
+import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,7 +44,7 @@ public abstract class ShaderChunkRendererMixin {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/shader/ChunkShaderInterface;setupState()V"), method = "begin")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/shader/ChunkShaderInterface;setupState()V"), method = "begin")
     public void updateCoverUniform(TerrainRenderPass pass, CallbackInfo ci) {
         if(pass == CustomTerrainRenderPasses.COVER) {
             if(mekanism_covers$coverTransparencyUniform != null) {

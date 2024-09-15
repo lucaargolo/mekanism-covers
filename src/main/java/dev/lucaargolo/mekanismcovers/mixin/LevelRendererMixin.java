@@ -1,6 +1,5 @@
 package dev.lucaargolo.mekanismcovers.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.lucaargolo.mekanismcovers.CoverRenderType;
 import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -17,22 +16,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
 
-    @Shadow protected abstract void renderChunkLayer(RenderType pRenderType, PoseStack pPoseStack, double pCamX, double pCamY, double pCamZ, Matrix4f pProjectionMatrix);
+
+    @Shadow protected abstract void renderSectionLayer(RenderType renderType, double x, double y, double z, Matrix4f frustrumMatrix, Matrix4f projectionMatrix);
 
     @Unique
     boolean mekanism_covers$isRenderingCover = false;
 
-    @Inject(at = @At("HEAD"), method = "renderChunkLayer")
-    public void renderCover(RenderType pRenderType, PoseStack pPoseStack, double pCamX, double pCamY, double pCamZ, Matrix4f pProjectionMatrix, CallbackInfo ci) {
-        if(pRenderType == RenderType.translucent()) {
+    @Inject(at = @At("HEAD"), method = "renderSectionLayer")
+    public void renderCover(RenderType renderType, double x, double y, double z, Matrix4f frustrumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+        if(renderType == RenderType.translucent()) {
             mekanism_covers$isRenderingCover = true;
             MekanismCoversClient.updateShaderTransparency();
-            renderChunkLayer(CoverRenderType.COVER, pPoseStack, pCamX, pCamY, pCamZ, pProjectionMatrix);
+            renderSectionLayer(CoverRenderType.COVER, x, y, z, frustrumMatrix, projectionMatrix);
             mekanism_covers$isRenderingCover = false;
         }
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;translucent()Lnet/minecraft/client/renderer/RenderType;"), method = "renderChunkLayer")
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;translucent()Lnet/minecraft/client/renderer/RenderType;"), method = "renderSectionLayer")
     public RenderType redirectTranslucentCoverLayer(RenderType original) {
         if(mekanism_covers$isRenderingCover) {
             return CoverRenderType.COVER;

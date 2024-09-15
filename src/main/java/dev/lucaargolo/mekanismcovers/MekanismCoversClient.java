@@ -13,6 +13,8 @@ import mekanism.common.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -20,19 +22,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterShadersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.io.IOException;
 
 import static dev.lucaargolo.mekanismcovers.MekanismCovers.COVER_MODEL;
 import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class MekanismCoversClient {
 
     public static boolean DISABLE_ADVANCED_LAYER = ModConfig.getInstance().isDisableAdvancedLayer();
@@ -42,13 +46,18 @@ public class MekanismCoversClient {
     private static boolean lastTransparency = false;
 
     @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new CoverItem.CoverItemExtensions(), MekanismCovers.COVER.get());
+    }
+
+    @SubscribeEvent
     public static void registerCoverModel(ModelEvent.RegisterAdditional event) {
         event.register(COVER_MODEL);
     }
 
     @SubscribeEvent
     public static void registerShaders(RegisterShadersEvent event) throws IOException {
-        event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(MODID, "rendertype_cover"), DefaultVertexFormat.BLOCK), instance -> {
+        event.registerShader(new ShaderInstance(event.getResourceProvider(), ResourceLocation.fromNamespaceAndPath(MODID, "rendertype_cover"), DefaultVertexFormat.BLOCK), instance -> {
             COVER_TRANSPARENCY = instance.getUniform("CoverTransparency");
             COVER_SHADER = instance;
         });
@@ -56,7 +65,7 @@ public class MekanismCoversClient {
 
     @SubscribeEvent
     public static void blockColorsRegister(RegisterColorHandlersEvent.Block event) {
-        Block[] transmitters = MekanismBlocks.BLOCKS.getAllBlocks().stream().map(IBlockProvider::getBlock).filter(block -> block instanceof BlockTransmitter).toList().toArray(new Block[0]);
+        Block[] transmitters = BuiltInRegistries.BLOCK.stream().filter(block -> block instanceof BlockTransmitter).toList().toArray(new Block[0]);
         event.register((pState, pLevel, pPos, pTintIndex) -> {
             if(pPos != null) {
                 TileEntityTransmitter tile = WorldUtils.getTileEntity(TileEntityTransmitter.class, pLevel, pPos);

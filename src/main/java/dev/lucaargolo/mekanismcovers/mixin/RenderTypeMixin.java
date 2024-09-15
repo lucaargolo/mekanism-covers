@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class RenderTypeMixin {
 
     @Shadow @Final @Mutable
-    private static ImmutableList<RenderType> CHUNK_BUFFER_LAYERS;
+    public static ImmutableList<RenderType> CHUNK_BUFFER_LAYERS;
 
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void onInit(CallbackInfo info) {

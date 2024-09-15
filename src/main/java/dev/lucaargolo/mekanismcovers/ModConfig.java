@@ -3,7 +3,7 @@ package dev.lucaargolo.mekanismcovers;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

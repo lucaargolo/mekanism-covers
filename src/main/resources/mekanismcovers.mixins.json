@@ -6,6 +6,7 @@
   "plugin": "dev.lucaargolo.mekanismcovers.CompatMixinPlugin",
   "refmap": "mekanismcovers.refmap.json",
   "mixins": [
+    "BlockBaseMixin",
     "BlockMekanismMixin",
     "BlockStateBaseMixin",
     "BlockTransmitterMixin",
@@ -22,8 +23,6 @@
     "TransmitterBakedModelMixin",
     "iris.CommonUniformsMixin",
     "iris.CustomUniformsMixin",
-    "iris.IrisChunkProgramOverridesMixin",
-    "iris.IrisTerrainPassMixin",
     "sodium.DefaultMaterialsMixin",
     "sodium.DefaultTerrainRenderPassesMixin",
     "sodium.ShaderChunkRendererMixin",

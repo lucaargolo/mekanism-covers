@@ -1,7 +1,7 @@
 package dev.lucaargolo.mekanismcovers.sodium;
 
 import dev.lucaargolo.mekanismcovers.CoverRenderType;
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
+import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 
 public class CustomTerrainRenderPasses {
 
