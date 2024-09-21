@@ -1,6 +1,6 @@
 package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
-import dev.lucaargolo.mekanismcovers.sodium.CustomTerrainRenderPasses;
+import dev.lucaargolo.mekanismcovers.compat.CompatSodium;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.DefaultTerrainRenderPasses;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import org.spongepowered.asm.mixin.Final;
@@ -21,7 +21,7 @@ public class DefaultTerrainRenderPassesMixin {
 
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void onInit(CallbackInfo ci) {
-        ALL = Stream.concat(Arrays.stream(ALL), Stream.of(CustomTerrainRenderPasses.COVER)).toArray(TerrainRenderPass[]::new);
+        ALL = Stream.concat(Arrays.stream(ALL), Stream.of(CompatSodium.COVER_RENDER_PASS)).toArray(TerrainRenderPass[]::new);
     }
 
 }

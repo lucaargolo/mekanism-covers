@@ -1,6 +1,6 @@
 package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
-import dev.lucaargolo.mekanismcovers.sodium.CustomTerrainRenderPasses;
+import dev.lucaargolo.mekanismcovers.compat.CompatSodium;
 
 import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
 import net.caffeinemc.mods.sodium.client.render.chunk.ChunkRenderMatrices;
@@ -20,7 +20,7 @@ public abstract class SodiumWorldRendererMixin {
     @Inject(at = @At("HEAD"), method = "drawChunkLayer")
     public void renderCover(RenderType renderLayer, ChunkRenderMatrices matrices, double x, double y, double z, CallbackInfo ci) {
         if(renderLayer == RenderType.translucent()) {
-            this.renderSectionManager.renderLayer(matrices, CustomTerrainRenderPasses.COVER, x, y, z);
+            this.renderSectionManager.renderLayer(matrices, CompatSodium.COVER_RENDER_PASS, x, y, z);
         }
     }
 

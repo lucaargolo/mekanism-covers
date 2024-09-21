@@ -1,9 +1,9 @@
 package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
 import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
-import dev.lucaargolo.mekanismcovers.sodium.CustomTerrainRenderPasses;
+import dev.lucaargolo.mekanismcovers.compat.CompatSodium;
 
-import net.caffeinemc.mods.sodium.client.gl.shader.GlProgram;
+import net.caffeinemc.mods.sodium.client.gl.shader.*;
 import net.caffeinemc.mods.sodium.client.gl.shader.uniform.GlUniformFloat;
 import net.caffeinemc.mods.sodium.client.render.chunk.ShaderChunkRenderer;
 import net.caffeinemc.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
@@ -24,29 +24,38 @@ import java.util.Map;
 public abstract class ShaderChunkRendererMixin {
 
     @Shadow @Final private Map<ChunkShaderOptions, GlProgram<ChunkShaderInterface>> programs;
-    @Shadow protected abstract GlProgram<ChunkShaderInterface> createShader(String path, ChunkShaderOptions options);
     @Unique
     private GlUniformFloat mekanism_covers$coverTransparencyUniform = null;
 
-    @Inject(at = @At("HEAD"), method = "compileProgram", cancellable = true)
-    public void compileCoverProgram(ChunkShaderOptions options, CallbackInfoReturnable<GlProgram<ChunkShaderInterface>> cir) {
-        if(options.pass() == CustomTerrainRenderPasses.COVER) {
+
+    @Inject(at = @At("HEAD"), method = "compileProgram")
+    public void compileProgramHead(ChunkShaderOptions options, CallbackInfoReturnable<GlProgram<ChunkShaderInterface>> cir) {
+        if(options.pass() == CompatSodium.COVER_RENDER_PASS) {
             GlProgram<ChunkShaderInterface> program = this.programs.get(options);
             if(program == null) {
-                this.programs.put(options, program = this.createShader("blocks/cover_block_layer_opaque", options));
+                CompatSodium.IS_COVER_RENDER_PASS = true;
+            }
+        }
+    }
+
+    @Inject(at = @At("TAIL"), method = "compileProgram")
+    public void compileProgramTail(ChunkShaderOptions options, CallbackInfoReturnable<GlProgram<ChunkShaderInterface>> cir) {
+        if(CompatSodium.IS_COVER_RENDER_PASS) {
+            GlProgram<ChunkShaderInterface> program = this.programs.get(options);
+            if(program != null) {
                 try {
                     mekanism_covers$coverTransparencyUniform = program.bindUniform("u_CoverTransparency", GlUniformFloat::new);
                 }catch (Exception e) {
                     mekanism_covers$coverTransparencyUniform = null;
                 }
             }
-            cir.setReturnValue(program);
         }
+        CompatSodium.IS_COVER_RENDER_PASS = false;
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/shader/ChunkShaderInterface;setupState()V"), method = "begin")
     public void updateCoverUniform(TerrainRenderPass pass, CallbackInfo ci) {
-        if(pass == CustomTerrainRenderPasses.COVER) {
+        if(pass == CompatSodium.COVER_RENDER_PASS) {
             if(mekanism_covers$coverTransparencyUniform != null) {
                 mekanism_covers$coverTransparencyUniform.set(MekanismCoversClient.getShaderTransparency());
             }

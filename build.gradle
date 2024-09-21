@@ -74,8 +74,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("maven.modrinth:sodium:${sodium_version}")
-    compileOnly("maven.modrinth:iris:${iris_version}")
+    implementation("maven.modrinth:sodium:${sodium_version}")
+    implementation("maven.modrinth:iris:${iris_version}")
 
     implementation("mekanism:Mekanism:${mekanism_version}")
     implementation("mekanism:Mekanism:${mekanism_version}:additions")
