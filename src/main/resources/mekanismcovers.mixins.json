@@ -12,7 +12,8 @@
     "TileEntityTransmitterMixin"
   ],
   "client": [
-    "BlockRendererMixin",
+    "EmbeddiumBlockRendererMixin",
+    "SodiumBlockRendererMixin",
     "BakedQuadAccessor",
     "MinecraftMixin",
     "ModelBlockRendererMixin",

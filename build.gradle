@@ -68,6 +68,9 @@ repositories {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
     }
+    maven {
+        url = "https://maven.su5ed.dev/releases"
+    }
     flatDir {
         dir 'libs'
     }
@@ -75,7 +78,15 @@ repositories {
 
 dependencies {
     implementation("maven.modrinth:sodium:${sodium_version}")
+    //For sodium
+    implementation("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308ded19")
+    implementation("org.sinytra.forgified-fabric-api:fabric-renderer-api-v1:3.4.0+acb05a3919")
+    implementation("org.sinytra.forgified-fabric-api:fabric-rendering-data-attachment-v1:0.3.48+73761d2e19")
+    implementation("org.sinytra.forgified-fabric-api:fabric-block-view-api-v2:1.0.10+9afaaf8c19")
     implementation("maven.modrinth:iris:${iris_version}")
+
+    compileOnly("maven.modrinth:embeddium:1.0.11+mc1.21.1")
+
 
     implementation("mekanism:Mekanism:${mekanism_version}")
     implementation("mekanism:Mekanism:${mekanism_version}:additions")
