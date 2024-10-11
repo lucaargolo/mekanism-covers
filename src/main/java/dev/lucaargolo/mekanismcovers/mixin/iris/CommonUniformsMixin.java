@@ -1,4 +1,4 @@
-package dev.lucaargolo.mekanismcovers.mixin;
+package dev.lucaargolo.mekanismcovers.mixin.iris;
 
 import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
 import net.irisshaders.iris.gl.uniform.UniformHolder;

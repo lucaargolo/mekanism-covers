@@ -1,4 +1,4 @@
-package dev.lucaargolo.mekanismcovers.mixin;
+package dev.lucaargolo.mekanismcovers.mixin.iris;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.irisshaders.iris.uniforms.custom.CustomUniforms;

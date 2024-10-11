@@ -28,6 +28,8 @@ import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class MekanismCoversClient {
 
+    public static final boolean ADVANCED_COVER_RENDERING = !ModConfig.getInstance().isDisableAdvancedCoverRendering();
+
     public static Short COVER_ENTITY_ID = null;
 
     private static boolean lastTransparency = false;
@@ -41,7 +43,7 @@ public class MekanismCoversClient {
     public static void blockColorsRegister(RegisterColorHandlersEvent.Block event) {
         Block[] transmitters = MekanismBlocks.BLOCKS.getAllBlocks().stream().map(IBlockProvider::getBlock).filter(block -> block instanceof BlockTransmitter).toList().toArray(new Block[0]);
         event.register((pState, pLevel, pPos, pTintIndex) -> {
-            if(pTintIndex == 1337 && pPos != null) {
+            if((!MekanismCoversClient.ADVANCED_COVER_RENDERING || pTintIndex == 1337) && pPos != null) {
                 TileEntityTransmitter tile = WorldUtils.getTileEntity(TileEntityTransmitter.class, pLevel, pPos);
                 if(tile instanceof TileEntityTransmitterMixed transmitter) {
                     BlockState coverState = transmitter.mekanism_covers$getCoverState();

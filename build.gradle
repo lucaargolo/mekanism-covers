@@ -89,8 +89,6 @@ dependencies {
 
     implementation fg.deobf("org.embeddedt:embeddium-${minecraft_version}:${embeddium_version}")
     implementation fg.deobf("curse.maven:oculus-581495:5299671")
-    implementation fg.deobf("blank:acedium:0.2.7-beta")
-
 
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")

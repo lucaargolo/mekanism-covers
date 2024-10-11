@@ -4,6 +4,7 @@
   "package": "dev.lucaargolo.mekanismcovers.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "mekanismcovers.refmap.json",
+  "plugin": "dev.lucaargolo.mekanismcovers.CompatMixinPlugin",
   "mixins": [
     "BlockMekanismMixin",
     "BlockStateBaseMixin",
@@ -12,12 +13,12 @@
     "TileEntityTransmitterMixin"
   ],
   "client": [
-    "BlockMaterialMappingMixin",
-    "CommonUniformsMixin",
-    "CustomUniformsMixin",
-    "IrisChunkProgramOverridesMixin",
+    "iris.BlockMaterialMappingMixin",
+    "iris.CommonUniformsMixin",
+    "iris.CustomUniformsMixin",
+    "iris.IrisChunkProgramOverridesMixin",
     "BakedQuadAccessor",
-    "BlockRendererMixin",
+    "sodium.BlockRendererMixin",
     "MinecraftMixin",
     "ModelBlockRendererMixin",
     "TransmitterBakedModelMixin"

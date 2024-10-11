@@ -2,6 +2,7 @@ package dev.lucaargolo.mekanismcovers.mixin;
 
 import dev.lucaargolo.mekanismcovers.MekanismCovers;
 import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
+import dev.lucaargolo.mekanismcovers.ModConfig;
 import mekanism.client.render.obj.TransmitterBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -43,9 +44,15 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                 boolean transparent = MekanismCoversClient.isCoverTransparentFast();
                 if(transparent) {
                     if(renderType == RenderType.translucent()) {
-                        List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, extraData, renderType);
-                        coverQuads.forEach(q -> ((BakedQuadAccessor) q).setTintIndex(1337));
-                        cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
+                        if(MekanismCoversClient.ADVANCED_COVER_RENDERING) {
+                            List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, extraData, renderType);
+                            coverQuads.forEach(q -> ((BakedQuadAccessor) q).setTintIndex(1337));
+                            cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
+                        }else{
+                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                            List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
+                            cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
+                        }
                     }
                 }else{
                     if(renderType != null && bakedModel.getRenderTypes(coverState, rand, ModelData.EMPTY).contains(renderType)) {
