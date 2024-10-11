@@ -28,6 +28,8 @@ import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class MekanismCoversClient {
 
+    public static Short COVER_ENTITY_ID = null;
+
     private static boolean lastTransparency = false;
 
     @SubscribeEvent
@@ -114,6 +116,50 @@ public class MekanismCoversClient {
             return transparent;
         } else {
             return false;
+        }
+    }
+
+    public static String modifyIrisVertex(String source) {
+        if(MekanismCoversClient.COVER_ENTITY_ID != null) {
+            String[] lines = source.split("\n");
+
+            StringBuilder modifiedSource = new StringBuilder();
+            modifiedSource.append(lines[0]).append("\n");
+            if(!source.contains("mc_Entity")) {
+                modifiedSource.append("in vec2 mc_Entity;\n");
+            }
+            modifiedSource.append("flat out int mekanismCoverInjectMat;\n");
+            for (int i = 1; i < lines.length - 1; i++) {
+                modifiedSource.append(lines[i]).append("\n");
+            }
+            modifiedSource.append("mekanismCoverInjectMat = int(mc_Entity.x + 0.5);\n");
+            modifiedSource.append(lines[lines.length - 1]);
+
+            return modifiedSource.toString();
+        }else {
+            return source;
+        }
+    }
+
+    public static String modifyIrisFragment(String source) {
+        if(MekanismCoversClient.COVER_ENTITY_ID != null) {
+            String[] lines = source.split("\n");
+
+            StringBuilder modifiedSource = new StringBuilder();
+            modifiedSource.append(lines[0]).append("\n");
+            modifiedSource.append("flat in int mekanismCoverInjectMat;\n");
+            modifiedSource.append("uniform float mkcv_CoverTransparency;\n");
+            for (int i = 1; i < lines.length - 1; i++) {
+                modifiedSource.append(lines[i]).append("\n");
+            }
+            modifiedSource.append("if(mekanismCoverInjectMat == ").append(MekanismCoversClient.COVER_ENTITY_ID).append(") {\n");
+            modifiedSource.append("    iris_FragData0.a *= mkcv_CoverTransparency;\n");
+            modifiedSource.append("}\n");
+            modifiedSource.append(lines[lines.length - 1]);
+
+            return modifiedSource.toString();
+        }else {
+            return source;
         }
     }
 
