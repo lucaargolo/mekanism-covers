@@ -31,7 +31,7 @@ public abstract class BlockTransmitterMixin extends BlockMekanism implements ISt
 
     @Inject(at = @At("HEAD"), method = "getShape", cancellable = true)
     public void getCorrectShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        if(context instanceof EntityCollisionContextAccessor accessor && accessor.getHeldItem() != null && accessor.getHeldItem().is(MekanismItems.CONFIGURATOR.get()) && MekanismItems.CONFIGURATOR.get().getMode(accessor.getHeldItem()) == ItemConfigurator.ConfiguratorMode.valueOf("COVER")) {
+        if(context instanceof EntityCollisionContextAccessor accessor && accessor.getHeldItem() != null && accessor.getHeldItem().is(MekanismItems.CONFIGURATOR.get()) && MekanismItems.CONFIGURATOR.get().getMode(accessor.getHeldItem()) == ItemConfigurator.ConfiguratorMode.WRENCH) {
             cir.setReturnValue(getRealShape(world, pos));
         }
     }

@@ -3,33 +3,20 @@
   "minVersion": "0.8",
   "package": "dev.lucaargolo.mekanismcovers.mixin",
   "compatibilityLevel": "JAVA_21",
-  "plugin": "dev.lucaargolo.mekanismcovers.compat.CompatMixinPlugin",
   "refmap": "mekanismcovers.refmap.json",
   "mixins": [
-    "BlockBaseMixin",
     "BlockMekanismMixin",
     "BlockStateBaseMixin",
     "BlockTransmitterMixin",
-    "ConfiguratorModeMixin",
     "EntityCollisionContextAccessor",
-    "ItemConfiguratorMixin",
     "TileEntityTransmitterMixin"
   ],
   "client": [
-    "LevelRendererMixin",
+    "BlockRendererMixin",
+    "BakedQuadAccessor",
     "MinecraftMixin",
-    "RenderTypeAccessor",
-    "RenderTypeMixin",
-    "TransmitterBakedModelMixin",
-    "iris.CommonUniformsMixin",
-    "iris.CustomUniformsMixin",
-    "iris.SodiumProgramsMixin",
-    "iris.SodiumProgramsPassMixin",
-    "sodium.ShaderLoaderMixin",
-    "sodium.DefaultMaterialsMixin",
-    "sodium.DefaultTerrainRenderPassesMixin",
-    "sodium.ShaderChunkRendererMixin",
-    "sodium.SodiumWorldRendererMixin"
+    "ModelBlockRendererMixin",
+    "TransmitterBakedModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
