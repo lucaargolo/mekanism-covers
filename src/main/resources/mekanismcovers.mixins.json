@@ -12,8 +12,12 @@
     "TileEntityTransmitterMixin"
   ],
   "client": [
-    "BlockRendererMixin",
+    "BlockMaterialMappingMixin",
+    "CommonUniformsMixin",
+    "CustomUniformsMixin",
+    "IrisChunkProgramOverridesMixin",
     "BakedQuadAccessor",
+    "BlockRendererMixin",
     "MinecraftMixin",
     "ModelBlockRendererMixin",
     "TransmitterBakedModelMixin"
