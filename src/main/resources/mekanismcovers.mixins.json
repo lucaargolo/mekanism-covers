@@ -9,18 +9,18 @@
     "BlockStateBaseMixin",
     "BlockTransmitterMixin",
     "EntityCollisionContextAccessor",
+    "SodiumProgramsMixin",
     "TileEntityTransmitterMixin"
   ],
   "client": [
-    "EmbeddiumBlockRendererMixin",
-    "SodiumBlockRendererMixin",
+    "BakedQuadAccessor",
     "BlockMaterialMappingMixin",
     "CommonUniformsMixin",
     "CustomUniformsMixin",
-    "IrisChunkProgramOverridesMixin",
-    "BakedQuadAccessor",
+    "EmbeddiumBlockRendererMixin",
     "MinecraftMixin",
     "ModelBlockRendererMixin",
+    "SodiumBlockRendererMixin",
     "TransmitterBakedModelMixin"
   ],
   "injectors": {
