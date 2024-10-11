@@ -57,6 +57,7 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                 }else{
                     if(renderType != null && bakedModel.getRenderTypes(coverState, rand, ModelData.EMPTY).contains(renderType)) {
                         List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, extraData, renderType);
+                        coverQuads.forEach(q -> ((BakedQuadAccessor) q).setTintIndex(1337));
                         cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
                     }
                 }

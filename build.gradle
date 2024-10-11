@@ -95,7 +95,7 @@ dependencies {
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
 }
 
 tasks.named('processResources', ProcessResources).configure {

@@ -22,7 +22,7 @@ public class BlockRendererMixin {
     public void putTranslucentVertexColor(BlockRenderContext ctx, ChunkModelBuilder builder, Vec3 offset, Material material, BakedQuadView quad, int[] colors, QuadLightData light, CallbackInfo ci) {
         if(quad.getColorIndex() == 1337 && MekanismCoversClient.isCoverTransparentFast() && ctx.state().getBlock() instanceof BlockTransmitter) {
             for (int i = 0; i < colors.length; i++) {
-                colors[i] = ColorARGB.pack(ColorARGB.unpackRed(colors[i]), ColorARGB.unpackGreen(colors[i]), ColorARGB.unpackBlue(colors[i]), 255/2);
+                colors[i] = ColorARGB.pack(ColorARGB.unpackRed(colors[i]), ColorARGB.unpackGreen(colors[i]), ColorARGB.unpackBlue(colors[i]), 255/3);
             }
         }
     }
