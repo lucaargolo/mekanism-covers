@@ -1,4 +1,4 @@
-package dev.lucaargolo.mekanismcovers.mixin;
+package dev.lucaargolo.mekanismcovers.mixin.sodium;
 
 import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
 import mekanism.common.block.transmitter.BlockTransmitter;
@@ -22,7 +22,7 @@ public abstract class SodiumBlockRendererMixin extends AbstractBlockRenderContex
     public void putTranslucentVertexColor(MutableQuadViewImpl quad, int colorIndex, CallbackInfo ci) {
         if(colorIndex == 1337 && MekanismCoversClient.isCoverTransparentFast() && this.state.getBlock() instanceof BlockTransmitter) {
             for (int i = 0; i < vertexColors.length; i++) {
-                vertexColors[i] = ColorARGB.pack(ColorARGB.unpackRed(vertexColors[i]), ColorARGB.unpackGreen(vertexColors[i]), ColorARGB.unpackBlue(vertexColors[i]), 255/2);
+                vertexColors[i] = ColorARGB.pack(ColorARGB.unpackRed(vertexColors[i]), ColorARGB.unpackGreen(vertexColors[i]), ColorARGB.unpackBlue(vertexColors[i]), 255/3);
             }
         }
     }

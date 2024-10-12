@@ -4,23 +4,24 @@
   "package": "dev.lucaargolo.mekanismcovers.mixin",
   "compatibilityLevel": "JAVA_21",
   "refmap": "mekanismcovers.refmap.json",
+  "plugin": "dev.lucaargolo.mekanismcovers.CompatMixinPlugin",
   "mixins": [
     "BlockMekanismMixin",
     "BlockStateBaseMixin",
     "BlockTransmitterMixin",
     "EntityCollisionContextAccessor",
-    "SodiumProgramsMixin",
     "TileEntityTransmitterMixin"
   ],
   "client": [
-    "BakedQuadAccessor",
-    "BlockMaterialMappingMixin",
-    "CommonUniformsMixin",
-    "CustomUniformsMixin",
-    "EmbeddiumBlockRendererMixin",
+    "iris.SodiumProgramsMixin",
+    "iris.BlockMaterialMappingMixin",
+    "iris.CommonUniformsMixin",
+    "iris.CustomUniformsMixin",
+    "sodium.SodiumBlockRendererMixin",
+    "embeddium.EmbeddiumBlockRendererMixin",
     "MinecraftMixin",
+    "BakedQuadAccessor",
     "ModelBlockRendererMixin",
-    "SodiumBlockRendererMixin",
     "TransmitterBakedModelMixin"
   ],
   "injectors": {

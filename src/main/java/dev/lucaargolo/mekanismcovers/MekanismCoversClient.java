@@ -28,6 +28,8 @@ import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class MekanismCoversClient {
 
+    public static final boolean ADVANCED_COVER_RENDERING = !ModConfig.getInstance().isDisableAdvancedCoverRendering();
+
     public static Short COVER_ENTITY_ID = null;
 
     private static boolean lastTransparency = false;
