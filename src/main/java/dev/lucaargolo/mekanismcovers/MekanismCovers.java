@@ -52,7 +52,6 @@ public class MekanismCovers {
     public static final DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<CoverRecipe>> COVER_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_cover", () -> new SimpleCraftingRecipeSerializer<>(CoverRecipe::new));
 
     public static final ModelProperty<BlockState> COVER_STATE = new ModelProperty<>();
-    public static final ModelResourceLocation COVER_MODEL = ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(MODID, "block/cover"));
 
     public MekanismCovers(IEventBus modEventBus, ModContainer modContainer) {
         ITEMS.register(modEventBus);

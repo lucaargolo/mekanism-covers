@@ -8,7 +8,9 @@ import mekanism.common.tile.transmitter.TileEntityTransmitter;
 import mekanism.common.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +24,6 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
-import static dev.lucaargolo.mekanismcovers.MekanismCovers.COVER_MODEL;
 import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 
 @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -33,6 +34,8 @@ public class MekanismCoversClient {
     public static Short COVER_ENTITY_ID = null;
 
     private static boolean lastTransparency = false;
+
+    public static final ModelResourceLocation COVER_MODEL = ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(MODID, "block/cover"));
 
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {

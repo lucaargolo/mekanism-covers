@@ -105,14 +105,14 @@ public class CoverItem extends Item {
                     BlockState coverState;
                     if(coverBlock == null) {
                         coverState = Blocks.AIR.defaultBlockState();
-                        coverStateModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                        coverStateModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
                         transparent = false;
                     }else{
                         coverState = coverBlock.defaultBlockState();
                         coverStateModel = minecraft.getBlockRenderer().getBlockModel(coverState);
                     }
                     BlockState state = Blocks.AIR.defaultBlockState();
-                    BakedModel coverModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                    BakedModel coverModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
 
                     RenderType renderType = transparent ? RenderType.entityTranslucentCull(InventoryMenu.BLOCK_ATLAS) : RenderType.entitySolid(InventoryMenu.BLOCK_ATLAS);
                     VertexConsumer consumer = pBuffer.getBuffer(renderType);

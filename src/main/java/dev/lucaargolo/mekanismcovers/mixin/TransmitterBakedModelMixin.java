@@ -48,7 +48,7 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                             coverQuads.forEach(q -> ((BakedQuadAccessor) q).setTintIndex(1337));
                             cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
                         }else{
-                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
                             List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
                             cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
                         }
