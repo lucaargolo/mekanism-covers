@@ -82,4 +82,10 @@ public abstract class BlockTransmitterMixin extends BlockMekanism implements ISt
         }
         return ambientLight;
     }
+
+    @Override
+    public boolean hasDynamicShape() {
+        return true;
+    }
+
 }
