@@ -21,7 +21,8 @@
     "sodium.BlockRendererMixin",
     "MinecraftMixin",
     "ModelBlockRendererMixin",
-    "TransmitterBakedModelMixin"
+    "TransmitterBakedModelMixin",
+    "ClientBlockTransmitterMixin"
   ],
   "injectors": {
     "defaultRequire": 1
