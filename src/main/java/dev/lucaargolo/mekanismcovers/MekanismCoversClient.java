@@ -19,8 +19,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import static dev.lucaargolo.mekanismcovers.MekanismCovers.COVER_MODEL;
 import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
@@ -160,4 +162,8 @@ public class MekanismCoversClient {
         }
     }
 
+    @NotNull
+    public static ModelData getModelData(BlockState state, BlockAndTintGetter level, BlockPos worldPosition) {
+        return Minecraft.getInstance().getBlockRenderer().getBlockModel(state).getModelData(level, worldPosition, state, ModelData.EMPTY);
+    }
 }

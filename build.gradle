@@ -77,6 +77,10 @@ repositories {
         url = 'https://modmaven.dev/'
     }
     maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
         url "https://cursemaven.com"
     }
     flatDir {
@@ -94,6 +98,10 @@ dependencies {
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")
+
+    runtimeOnly("maven.modrinth:athena-ctm:4.0.1")
+    runtimeOnly("maven.modrinth:chipped:4.0.2")
+    runtimeOnly("maven.modrinth:resourceful-lib:3.0.11")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
 }

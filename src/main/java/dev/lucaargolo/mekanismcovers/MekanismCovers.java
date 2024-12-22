@@ -15,6 +15,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -31,6 +32,8 @@ public class MekanismCovers {
     public static final String MODID = "mekanismcovers";
 
     public static final ModelProperty<BlockState> COVER_STATE = new ModelProperty<>();
+    public static final ModelProperty<ModelData> COVER_DATA = new ModelProperty<>();
+
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final RegistryObject<Item> EMPTY_COVER = ITEMS.register("empty_cover", () -> new EmptyCoverItem(new Item.Properties()));

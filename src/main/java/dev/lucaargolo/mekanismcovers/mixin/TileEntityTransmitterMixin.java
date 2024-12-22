@@ -14,7 +14,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,14 +34,9 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
         super(type, pos, state);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Inject(at = @At("RETURN"), method = "getModelData", cancellable = true, remap = false)
     public void injectCoverModel(CallbackInfoReturnable<ModelData> cir) {
-        ModelData data = cir.getReturnValue();
-        ModelData.Builder builder = ModelData.builder();
-        for(ModelProperty property : data.getProperties()) {
-            builder.with(property, data.get(property));
-        }
+        ModelData.Builder builder = cir.getReturnValue().derive();
         if(this.mekanism_covers$coverState != null) {
             builder.with(MekanismCovers.COVER_STATE, this.mekanism_covers$coverState);
         }
