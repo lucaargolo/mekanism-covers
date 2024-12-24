@@ -99,6 +99,8 @@ dependencies {
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
     implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")
 
+    implementation fg.deobf("maven.modrinth:jade:${jade_version}")
+
     runtimeOnly("maven.modrinth:athena-ctm:4.0.1")
     runtimeOnly("maven.modrinth:chipped:4.0.2")
     runtimeOnly("maven.modrinth:resourceful-lib:3.0.11")
