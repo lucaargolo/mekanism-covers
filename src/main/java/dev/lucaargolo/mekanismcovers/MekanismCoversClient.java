@@ -34,9 +34,7 @@ import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 public class MekanismCoversClient {
 
     public static final boolean ADVANCED_COVER_RENDERING = !ModConfig.getInstance().isDisableAdvancedCoverRendering();
-
-    public static Short COVER_ENTITY_ID = null;
-
+    
     private static boolean lastTransparency = false;
 
     @SubscribeEvent

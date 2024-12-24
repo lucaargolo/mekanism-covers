@@ -46,8 +46,8 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                     if(renderType == RenderType.translucent()) {
                         if(MekanismCoversClient.ADVANCED_COVER_RENDERING && !MekanismCoversClient.hasShaderPack()) {
                             List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, data, renderType);
-                            coverQuads.forEach(q -> ((BakedQuadAccessor) q).setTintIndex(1337));
-                            cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
+                            Stream<BakedQuad> copiedQuads = coverQuads.stream().map(q -> new BakedQuad(q.getVertices(), q.isTinted() ? 1337 : 1338, q.getDirection(), q.getSprite(), q.isShade(), q.hasAmbientOcclusion()));
+                            cir.setReturnValue(Stream.concat(originalQuads.stream(), copiedQuads).toList());
                         }else{
                             BakedModel altModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
                             List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
@@ -57,8 +57,8 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                 }else{
                     if(renderType != null && bakedModel.getRenderTypes(coverState, rand, ModelData.EMPTY).contains(renderType)) {
                         List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, data, renderType);
-                        coverQuads.forEach(q -> ((BakedQuadAccessor) q).setTintIndex(1337));
-                        cir.setReturnValue(Stream.concat(originalQuads.stream(), coverQuads.stream()).toList());
+                        Stream<BakedQuad> copiedQuads = coverQuads.stream().map(q -> new BakedQuad(q.getVertices(), q.isTinted() ? 1337 : 1338, q.getDirection(), q.getSprite(), q.isShade(), q.hasAmbientOcclusion()));
+                        cir.setReturnValue(Stream.concat(originalQuads.stream(), copiedQuads).toList());
                     }
                 }
             }

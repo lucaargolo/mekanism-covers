@@ -22,7 +22,7 @@ public class BlockMekanismMixin {
         if((!state.is(newState.getBlock()) || !newState.getFluidState().isEmpty()) && (Object) this instanceof BlockTransmitter) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if(blockEntity instanceof TileEntityTransmitterMixed transmitter && transmitter.mekanism_covers$getCoverState() != null) {
-                MekanismCovers.removeCover(world, blockEntity, state, pos, transmitter);
+                MekanismCovers.removeCover(world, blockEntity, state, pos, transmitter, false);
             }
         }
     }

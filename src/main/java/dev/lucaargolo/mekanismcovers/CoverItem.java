@@ -53,7 +53,7 @@ public class CoverItem extends Item {
             BlockState coverState = coverBlock.getStateForPlacement(new BlockPlaceContext(pContext));
             if(!level.isClientSide) {
                 if (transmitter.mekanism_covers$getCoverState() != null) {
-                    MekanismCovers.removeCover(level, entity, state, pos, transmitter);
+                    MekanismCovers.removeCover(level, entity, state, pos, transmitter, true);
                 }
                 transmitter.mekanism_covers$setCoverState(coverState);
                 entity.setChanged();

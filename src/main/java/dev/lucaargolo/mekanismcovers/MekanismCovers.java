@@ -54,17 +54,19 @@ public class MekanismCovers {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(EMPTY_COVER);
     }
 
-    public static void removeCover(Level world, BlockEntity tile, BlockState state, BlockPos pos, TileEntityTransmitterMixed transmitter) {
+    public static void removeCover(Level world, BlockEntity tile, BlockState state, BlockPos pos, TileEntityTransmitterMixed transmitter, boolean update) {
         BlockState coverState = transmitter.mekanism_covers$getCoverState();
         ItemStack blockItemStack = coverState.getBlock().asItem().getDefaultInstance();
         ItemStack currentStack = new ItemStack(MekanismCovers.COVER.get());
         currentStack.getOrCreateTag().put("CoverBlockItem", blockItemStack.save(new CompoundTag()));
         Containers.dropItemStack(world, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, currentStack);
-        transmitter.mekanism_covers$setCoverState(null);
-        tile.setChanged();
-        world.sendBlockUpdated(pos, state, state, 3);
-        world.getLightEngine().checkBlock(pos);
-        PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)).send(new ClientboundLightUpdatePacket(new ChunkPos(pos), world.getLightEngine(), null, null));
+        if(update) {
+            transmitter.mekanism_covers$setCoverState(null);
+            tile.setChanged();
+            world.sendBlockUpdated(pos, state, state, 3);
+            world.getLightEngine().checkBlock(pos);
+            PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(pos)).send(new ClientboundLightUpdatePacket(new ChunkPos(pos), world.getLightEngine(), null, null));
+        }
     }
 
 }
