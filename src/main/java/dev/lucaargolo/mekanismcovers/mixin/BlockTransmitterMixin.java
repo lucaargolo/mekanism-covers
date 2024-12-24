@@ -11,10 +11,12 @@ import mekanism.common.tile.transmitter.TileEntityTransmitter;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -46,7 +48,7 @@ public abstract class BlockTransmitterMixin extends BlockMekanism implements ISt
             if (!world.isClientSide) {
                 BlockEntity tile = world.getBlockEntity(pos);
                 if(tile instanceof TileEntityTransmitterMixed transmitter && transmitter.mekanism_covers$getCoverState() != null) {
-                    MekanismCovers.removeCover(world, tile, state, pos, transmitter);
+                    MekanismCovers.removeCover(world, tile, state, pos, transmitter, true);
                     cir.setReturnValue(InteractionResult.SUCCESS);
                 }
             }
@@ -88,6 +90,7 @@ public abstract class BlockTransmitterMixin extends BlockMekanism implements ISt
     public boolean hasDynamicShape() {
         return true;
     }
+
 
     @Override
     public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState, @Nullable BlockPos queryPos) {

@@ -3,6 +3,7 @@ package dev.lucaargolo.mekanismcovers.jade;
 import dev.lucaargolo.mekanismcovers.MekanismCovers;
 import dev.lucaargolo.mekanismcovers.mixed.TileEntityTransmitterMixed;
 import mekanism.common.block.transmitter.BlockTransmitter;
+import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +23,7 @@ public class JadePlugin implements IWailaPlugin {
 
     public static class CoverComponentProvider implements IBlockComponentProvider {
 
-        private static final ResourceLocation COVER_COMPONENT = ResourceLocation.fromNamespaceAndPath(MekanismCovers.MODID, "cover_component");
+        private static final ResourceLocation COVER_COMPONENT = new ResourceLocation(MekanismCovers.MODID, "cover_component");
 
         @Override
         public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
@@ -32,7 +33,7 @@ public class JadePlugin implements IWailaPlugin {
                     ItemStack stack = state.getBlock().asItem().getDefaultInstance();
                     IElementHelper elements = IElementHelper.get();
                     iTooltip.add(elements.item(stack).message(null).translate(new Vec2(-21, 0)).size(new Vec2(18, 9)));
-                    TextElement text = new TextElement(state.getBlock().getName().withColor(0xFFFFFF));
+                    TextElement text = new TextElement(state.getBlock().getName().withStyle(ChatFormatting.WHITE));
                     iTooltip.append(text.translate(new Vec2(-18, 0)).size(new Vec2(text.getSize().x, 12)));
                 }
             }

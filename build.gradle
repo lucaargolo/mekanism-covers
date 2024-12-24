@@ -101,9 +101,9 @@ dependencies {
 
     implementation fg.deobf("maven.modrinth:jade:${jade_version}")
 
-    runtimeOnly("maven.modrinth:athena-ctm:4.0.1")
-    runtimeOnly("maven.modrinth:chipped:4.0.2")
-    runtimeOnly("maven.modrinth:resourceful-lib:3.0.11")
+    runtimeOnly fg.deobf("maven.modrinth:athena-ctm:3.1.2")
+    runtimeOnly fg.deobf("maven.modrinth:chipped:3.0.7")
+    runtimeOnly fg.deobf("maven.modrinth:resourceful-lib:2.1.29")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
 }

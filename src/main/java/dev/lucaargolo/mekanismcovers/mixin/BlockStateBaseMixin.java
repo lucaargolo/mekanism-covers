@@ -19,13 +19,18 @@ public abstract class BlockStateBaseMixin {
 
     @Shadow public abstract Block getBlock();
 
-    @Inject(at = @At("HEAD"), method = "getTicker", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "getTicker", cancellable = true)
     public  <T extends BlockEntity> void addClientTickerToTransmitters(Level pLevel, BlockEntityType<T> pBlockEntityType, CallbackInfoReturnable<BlockEntityTicker<T>> cir) {
         if(this.getBlock() instanceof BlockTransmitter && pLevel.isClientSide) {
+            BlockEntityTicker<T> ticker = cir.getReturnValue();
             cir.setReturnValue((pLevel1, pPos, pState, pBlockEntity) -> {
+                if(ticker != null) {
+                    ticker.tick(pLevel1, pPos, pState, pBlockEntity);
+                }
                 if(pBlockEntity instanceof TileEntityTransmitterMixed transmitter) {
                     transmitter.mekanism_covers$onUpdateClient();
                 }
+
             });
 
         }
