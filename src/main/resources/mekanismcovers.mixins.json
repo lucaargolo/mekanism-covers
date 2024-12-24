@@ -13,16 +13,12 @@
     "TileEntityTransmitterMixin"
   ],
   "client": [
-    "iris.BlockMaterialMappingMixin",
-    "iris.CommonUniformsMixin",
-    "iris.CustomUniformsMixin",
-    "iris.IrisChunkProgramOverridesMixin",
     "BakedQuadAccessor",
-    "sodium.BlockRendererMixin",
+    "ClientBlockTransmitterMixin",
     "MinecraftMixin",
     "ModelBlockRendererMixin",
     "TransmitterBakedModelMixin",
-    "ClientBlockTransmitterMixin"
+    "sodium.BlockRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

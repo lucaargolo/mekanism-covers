@@ -24,6 +24,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Method;
+import java.util.Optional;
+
 import static dev.lucaargolo.mekanismcovers.MekanismCovers.COVER_MODEL;
 import static dev.lucaargolo.mekanismcovers.MekanismCovers.MODID;
 
@@ -166,4 +169,17 @@ public class MekanismCoversClient {
     public static ModelData getModelData(BlockState state, BlockAndTintGetter level, BlockPos worldPosition) {
         return Minecraft.getInstance().getBlockRenderer().getBlockModel(state).getModelData(level, worldPosition, state, ModelData.EMPTY);
     }
+
+    @SuppressWarnings("rawtypes")
+    public static boolean hasShaderPack() {
+        try {
+            Class<?> irisClass = Thread.currentThread().getContextClassLoader().loadClass("net.irisshaders.iris.Iris");
+            Method packMethod = irisClass.getDeclaredMethod("getCurrentPack");
+            Optional optional = (Optional) packMethod.invoke(null);
+            return optional.isPresent();
+        }catch (Exception ignored) {
+            return false;
+        }
+    }
+
 }

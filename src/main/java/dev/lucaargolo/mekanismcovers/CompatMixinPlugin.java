@@ -41,9 +41,6 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
             if(mixinClass.equals("dev.lucaargolo.mekanismcovers.mixin.ModelBlockRendererMixin")) {
                 System.out.println("[Mekanism Covers] Advanced Cover Rendering is disabled. Disabling "+mixinClass);
                 return false;
-            }else if(mixinClass.startsWith("dev.lucaargolo.mekanismcovers.mixin.iris")) {
-                System.out.println("[Mekanism Covers] Advanced Cover Rendering is disabled. Disabling "+mixinClass);
-                return false;
             }else if (mixinClass.startsWith("dev.lucaargolo.mekanismcovers.mixin.sodium")) {
                 System.out.println("[Mekanism Covers] Advanced Cover Rendering is disabled. Disabling "+mixinClass);
                 return false;
