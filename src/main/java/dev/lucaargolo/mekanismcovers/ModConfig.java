@@ -25,13 +25,22 @@ public class ModConfig {
     private static final Gson GSON = new Gson().newBuilder().setPrettyPrinting().create();
 
     private boolean disableAdvancedCoverRendering = false;
+    private boolean enableShaderCompatibleRendering = false;
 
     public boolean isDisableAdvancedCoverRendering() {
         return disableAdvancedCoverRendering;
     }
 
+    public boolean isEnableShaderCompatibleRendering() {
+        return enableShaderCompatibleRendering;
+    }
+
     public void setDisableAdvancedCoverRendering(boolean disableAdvancedLayer) {
         this.disableAdvancedCoverRendering = disableAdvancedLayer;
+    }
+
+    public void setShaderCompatibleRendering(boolean enable) {
+        this.enableShaderCompatibleRendering = enable;
     }
 
     public void save() {

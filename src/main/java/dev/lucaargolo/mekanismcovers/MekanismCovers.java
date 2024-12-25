@@ -26,6 +26,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Mod(MekanismCovers.MODID)
 public class MekanismCovers {
 
@@ -34,6 +37,7 @@ public class MekanismCovers {
     public static final ModelProperty<BlockState> COVER_STATE = new ModelProperty<>();
     public static final ModelProperty<ModelData> COVER_DATA = new ModelProperty<>();
 
+    public static final Map<BlockPos, BlockState> POSSIBLE_BLOCKS = new HashMap<>();
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final RegistryObject<Item> EMPTY_COVER = ITEMS.register("empty_cover", () -> new EmptyCoverItem(new Item.Properties()));
