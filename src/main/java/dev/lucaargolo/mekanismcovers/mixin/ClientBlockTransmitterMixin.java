@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ClientBlockTransmitterMixin {
 
     @Unique
-    private static final RandomSource mekanism_covers$RAND = RandomSource.create();
+    private static final RandomSource mekanism_covers$RAND = RandomSource.createThreadSafe();
 
     @Inject(method = "getOcclusionShape", at = @At("RETURN"), cancellable = true)
     private void wrapOcclusion(BlockState state, BlockGetter world, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir) {

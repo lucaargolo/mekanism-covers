@@ -25,7 +25,7 @@ public class ModConfig {
     private static final Gson GSON = new Gson().newBuilder().setPrettyPrinting().create();
 
     private boolean disableAdvancedCoverRendering = false;
-    private boolean enableShaderCompatibleRendering = false;
+    private boolean enableShaderCompatibleRendering = true;
 
     public boolean isDisableAdvancedCoverRendering() {
         return disableAdvancedCoverRendering;
