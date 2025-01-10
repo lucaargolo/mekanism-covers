@@ -46,14 +46,25 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                 boolean transparent = MekanismCoversClient.isCoverTransparentFast();
                 if(transparent) {
                     if(renderType == RenderType.translucent()) {
-                        if(MekanismCoversClient.ADVANCED_COVER_RENDERING && !MekanismCoversClient.hasShaderPack()) {
-                            List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, data, renderType);
-                            Stream<BakedQuad> copiedQuads = coverQuads.stream().map(q -> new BakedQuad(q.getVertices(), q.isTinted() ? 1337 : 1338, q.getDirection(), q.getSprite(), q.isShade(), q.hasAmbientOcclusion()));
-                            cir.setReturnValue(Stream.concat(originalQuads.stream(), copiedQuads).toList());
-                        }else if (MekanismCoversClient.SHADER_COVER_RENDERING && MekanismCoversClient.hasShaderPack()) {
-                            cir.cancel();
+                        if(MekanismCoversClient.ADVANCED_COVER_RENDERING) {
+                            //If advanced cover rendering is enabled
+                            if(!MekanismCoversClient.hasShaderPack()) {
+                                //If there is no shader pack present, use vertex alpha.
+                                List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, data, renderType);
+                                Stream<BakedQuad> copiedQuads = coverQuads.stream().map(q -> new BakedQuad(q.getVertices(), q.isTinted() ? 1337 : 1338, q.getDirection(), q.getSprite(), q.isShade(), q.hasAmbientOcclusion()));
+                                cir.setReturnValue(Stream.concat(originalQuads.stream(), copiedQuads).toList());
+                            }else if (MekanismCoversClient.SHADER_COVER_RENDERING && MekanismCoversClient.hasShaderPack()) {
+                                //If there is a shader pack present and Shader Cover Rendering is enabled, use it
+                                cir.cancel();
+                            }else{
+                                //If there is a shader pack present and Shader Cover Rendering is disabled, default to alt rendering
+                                BakedModel altModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
+                                List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
+                                cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
+                            }
                         }else {
-                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
+                            //If advanced cover rendering is disabled, default to alt rendering
+                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
                             List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
                             cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
                         }
