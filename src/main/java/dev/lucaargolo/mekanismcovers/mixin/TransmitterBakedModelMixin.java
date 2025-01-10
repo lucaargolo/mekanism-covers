@@ -58,13 +58,13 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                                 cir.cancel();
                             }else{
                                 //If there is a shader pack present and Shader Cover Rendering is disabled, default to alt rendering
-                                BakedModel altModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
+                                BakedModel altModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
                                 List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
                                 cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
                             }
                         }else {
                             //If advanced cover rendering is disabled, default to alt rendering
-                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
+                            BakedModel altModel = minecraft.getModelManager().getModel(MekanismCovers.COVER_MODEL);
                             List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
                             cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
                         }

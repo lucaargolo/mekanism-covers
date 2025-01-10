@@ -89,7 +89,7 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lmekanism/common/content/network/transmitter/Transmitter;setTransmitterNetwork(Lmekanism/common/lib/transmitter/DynamicNetwork;)V"), method = "onWorldSeparate")
+    @Inject(at = @At(value = "INVOKE", target = "Lmekanism/common/content/network/transmitter/Transmitter;setTransmitterNetwork(Lmekanism/common/lib/transmitter/DynamicNetwork;)V"), method = "onWorldSeparate", remap = false)
     public void injectUnload(boolean stillPresent, CallbackInfo ci) {
         MekanismCovers.POSSIBLE_BLOCKS.remove(this.worldPosition);
     }

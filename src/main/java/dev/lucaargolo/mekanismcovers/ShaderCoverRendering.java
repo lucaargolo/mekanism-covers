@@ -11,18 +11,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.pipeline.VertexConsumerWrapper;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ShaderCoverRendering {
 
     @SubscribeEvent
@@ -34,9 +34,8 @@ public class ShaderCoverRendering {
         var baseConsumer = mc.renderBuffers().bufferSource().getBuffer(Sheets.translucentCullBlockSheet());
         var wrappedConsumer = new VertexConsumerWrapper(baseConsumer) {
             @Override
-            public @NotNull VertexConsumer setColor(int r, int g, int b, int a) {
-                super.setColor(r, g, b, 120);
-                return this;
+            public @NotNull VertexConsumer color(int r, int g, int b, int a) {
+                return super.color(r, g, b, 120);
             }
         };
         if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
@@ -45,7 +44,7 @@ public class ShaderCoverRendering {
                 if(!level.isLoaded(entry.getKey())) {
                     return;
                 }
-                if(level.getBlockState(entry.getKey()).getBlock() instanceof BlockTransmitter<?>) {
+                if(level.getBlockState(entry.getKey()).getBlock() instanceof BlockTransmitter) {
                     if(entry.getValue() == null) {
                         continue;
                     }
