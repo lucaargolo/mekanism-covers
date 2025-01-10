@@ -32,6 +32,9 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Mod(MekanismCovers.MODID)
 public class MekanismCovers {
 
@@ -50,6 +53,7 @@ public class MekanismCovers {
     public static final ModelProperty<BlockState> COVER_STATE = new ModelProperty<>();
     public static final ModelProperty<ModelData> COVER_DATA = new ModelProperty<>();
 
+    public static final Map<BlockPos, BlockState> POSSIBLE_BLOCKS = new HashMap<>();
 
     public MekanismCovers(IEventBus modEventBus, ModContainer modContainer) {
         ITEMS.register(modEventBus);

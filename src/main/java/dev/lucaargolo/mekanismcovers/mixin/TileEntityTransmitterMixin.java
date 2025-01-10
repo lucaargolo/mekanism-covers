@@ -84,10 +84,17 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
             String serialized = tag.getString("CoverState");
             BlockStateParser.BlockResult result = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), serialized, false);
             this.mekanism_covers$coverState = result.blockState();
+            MekanismCovers.POSSIBLE_BLOCKS.put(this.worldPosition, this.mekanism_covers$coverState);
             this.mekanism_covers$updateClientLight = true;
         }catch (Exception exception) {
             this.mekanism_covers$coverState = null;
+            MekanismCovers.POSSIBLE_BLOCKS.remove(this.worldPosition);
         }
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "Lmekanism/common/content/network/transmitter/Transmitter;setTransmitterNetwork(Lmekanism/common/lib/transmitter/DynamicNetwork;)V"), method = "onWorldSeparate")
+    public void injectUnload(boolean stillPresent, CallbackInfo ci) {
+        MekanismCovers.POSSIBLE_BLOCKS.remove(this.worldPosition);
     }
 
     @Override

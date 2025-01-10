@@ -50,7 +50,9 @@ public class TransmitterBakedModelMixin extends BakedModelWrapper<BakedModel> {
                             List<BakedQuad> coverQuads = bakedModel.getQuads(coverState, side, rand, data, renderType);
                             Stream<BakedQuad> copiedQuads = coverQuads.stream().map(q -> new BakedQuad(q.getVertices(), q.isTinted() ? 1337 : 1338, q.getDirection(), q.getSprite(), q.isShade(), q.hasAmbientOcclusion()));
                             cir.setReturnValue(Stream.concat(originalQuads.stream(), copiedQuads).toList());
-                        }else{
+                        }else if (MekanismCoversClient.SHADER_COVER_RENDERING && MekanismCoversClient.hasShaderPack()) {
+                            cir.cancel();
+                        }else {
                             BakedModel altModel = minecraft.getModelManager().getModel(MekanismCoversClient.COVER_MODEL);
                             List<BakedQuad> altQuads = altModel.getQuads(Blocks.AIR.defaultBlockState(), side, rand, extraData, renderType);
                             cir.setReturnValue(Stream.concat(originalQuads.stream(), altQuads.stream()).toList());
