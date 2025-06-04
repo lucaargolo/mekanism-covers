@@ -1,0 +1,6 @@
+{
+  "item.mekanismcovers.cover": "Фасад",
+  "text.mekanismcovers.empty": "Пусто",
+
+  "config.jade.plugin_mekanismcovers.cover_component": "Cover Component"
+}
