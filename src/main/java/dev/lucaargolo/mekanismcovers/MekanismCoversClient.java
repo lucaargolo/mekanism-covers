@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -97,6 +98,14 @@ public class MekanismCoversClient {
 
     public static boolean isCoverTransparentFast() {
         return lastTransparency;
+    }
+
+    public static void markCoverSectionDirty(BlockPos pos) {
+        Minecraft.getInstance().levelRenderer.setSectionDirty(
+                SectionPos.blockToSectionCoord(pos.getX()),
+                SectionPos.blockToSectionCoord(pos.getY()),
+                SectionPos.blockToSectionCoord(pos.getZ())
+        );
     }
 
     private static boolean isCoverTransparent() {
