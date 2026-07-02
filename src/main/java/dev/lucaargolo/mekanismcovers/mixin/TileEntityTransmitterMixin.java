@@ -1,6 +1,7 @@
 package dev.lucaargolo.mekanismcovers.mixin;
 
 import dev.lucaargolo.mekanismcovers.MekanismCovers;
+import dev.lucaargolo.mekanismcovers.MekanismCoversClient;
 import dev.lucaargolo.mekanismcovers.mixed.TileEntityTransmitterMixed;
 import mekanism.api.IAlloyInteraction;
 import mekanism.common.capabilities.proxy.ProxyConfigurable;
@@ -23,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(value = TileEntityTransmitter.class)
 public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity implements ProxyConfigurable.ISidedConfigurable, IAlloyInteraction, TileEntityTransmitterMixed {
 
@@ -30,6 +33,8 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
     private BlockState mekanism_covers$coverState = null;
     @Unique
     private boolean mekanism_covers$updateClientLight = false;
+    @Unique
+    private boolean mekanism_covers$updateClientRender = false;
 
     public TileEntityTransmitterMixin(TileEntityTypeRegistryObject<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -80,6 +85,7 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
 
     @Inject(at = @At("TAIL"), method = "handleUpdateTag", remap = false)
     public void injectUpdateTag(CompoundTag tag, HolderLookup.Provider provider, CallbackInfo ci) {
+        BlockState previousCover = this.mekanism_covers$coverState;
         try {
             String serialized = tag.getString("CoverState");
             BlockStateParser.BlockResult result = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), serialized, false);
@@ -89,6 +95,9 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
         }catch (Exception exception) {
             this.mekanism_covers$coverState = null;
             MekanismCovers.POSSIBLE_BLOCKS.remove(this.worldPosition);
+        }
+        if (!Objects.equals(previousCover, this.mekanism_covers$coverState)) {
+            this.mekanism_covers$updateClientRender = true;
         }
     }
 
@@ -108,6 +117,13 @@ public abstract class TileEntityTransmitterMixin extends CapabilityTileEntity im
                 this.level.getLightEngine().checkBlock(this.worldPosition);
                 this.mekanism_covers$updateClientLight = !this.level.getLightEngine().lightOnInSection(SectionPos.of(this.worldPosition));
             }
+        }
+        if (this.mekanism_covers$updateClientRender) {
+            this.requestModelDataUpdate();
+            if (this.level != null && this.level.isClientSide) {
+                MekanismCoversClient.markCoverSectionDirty(this.worldPosition);
+            }
+            this.mekanism_covers$updateClientRender = false;
         }
     }
 
